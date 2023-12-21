@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: rgb(225, 68, 42);
+  --secondary: rgba(227, 28, 121, 1);
+
+  --copy-primary: rgba(225, 68, 42, 1);
+  --copy-secondary: rgba(45, 54, 72, 1);
+  --border: rgba(203, 210, 224, 1);
+  --surfaces: rgba(255, 255, 255, 1);
+  --disabled: rgba(203, 210, 224, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: var(--copy-secondary);
+  background: linear-gradient(to bottom, transparent, var(--surfaces))
+    var(--surfaces);
+}
