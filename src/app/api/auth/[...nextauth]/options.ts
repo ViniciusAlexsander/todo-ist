@@ -18,6 +18,12 @@ export const authOptions: NextAuthOptions = {
   ],
   secret: process.env.NEXTAUTH_SECRET as string,
   callbacks: {
+    session: async ({ session, token, user }) => {
+      if (session?.user) {
+        session.user.id = user.id;
+      }
+      return session;
+    },
     async redirect({ url, baseUrl }) {
       return baseUrl;
     },
