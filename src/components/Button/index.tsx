@@ -9,20 +9,28 @@ interface IButtonProps
   > {
   fullWidth?: boolean;
   loading?: boolean;
+  size: "small" | "medium" | "large";
 }
 
 export const Button = ({
   children,
   fullWidth,
   loading,
+  size,
   ...rest
 }: IButtonProps) => {
+  const buttonSize = {
+    small: "py-1 px-1",
+    medium: "py-2 px-3",
+    large: "py-4 px-5",
+  };
+
   return (
     <button
       {...rest}
-      className={`flex items-center justify-center bg-primary text-surfaces disabled:bg-disabled font-bold rounded-md hover:bg-copy-primary py-4 px-5 ${
+      className={`flex items-center justify-center bg-primary text-surfaces disabled:bg-disabled font-bold rounded-md hover:bg-copy-primary  ${
         fullWidth ? "w-full" : ""
-      }`}
+      } ${buttonSize[size]}`}
     >
       {loading && (
         <svg

@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 :root {
-  --primary: rgb(225, 68, 42);
-  --secondary: rgba(227, 28, 121, 1);
+  --primary: rgb(52, 72, 76);
+  --secondary: rgb(192, 189, 180);
 
-  --copy-primary: rgba(225, 68, 42, 1);
-  --copy-secondary: rgba(45, 54, 72, 1);
+  --copy-primary: rgb(94, 115, 120);
+  --copy-secondary: rgb(233, 229, 220);
   --border: rgba(203, 210, 224, 1);
   --surfaces: rgba(255, 255, 255, 1);
   --disabled: rgba(203, 210, 224, 1);
@@ -22,7 +22,7 @@
 }
 
 body {
-  color: var(--copy-secondary);
+  color: var(--copy-primary);
   background: linear-gradient(to bottom, transparent, var(--surfaces))
     var(--surfaces);
 }

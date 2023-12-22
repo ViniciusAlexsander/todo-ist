@@ -18,6 +18,13 @@ export async function GET(req: Request, context: { params: any }) {
   }
 
   let project = await prisma.project.findFirst({
+    include: {
+      projectContribution: {
+        include: {
+          user: true,
+        },
+      },
+    },
     where: {
       id,
     },

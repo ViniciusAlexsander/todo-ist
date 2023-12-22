@@ -1,15 +1,7 @@
 import { useQuery } from "react-query";
 import { QueryCaches } from "../lib/reactQuery";
 import { axiosInstance } from "../lib/axios";
-
-export interface IProject {
-  id: string;
-  userId: string;
-  name: string;
-  description: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { IProject } from "../models/project";
 
 export const useProjects = () => {
   return useQuery(

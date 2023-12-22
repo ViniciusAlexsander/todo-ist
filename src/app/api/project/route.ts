@@ -33,11 +33,19 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
 
-  // if (!session) {
-  //   return NextResponse.json({ status: 401 });
-  // }
+  if (!session) {
+    return NextResponse.json({ status: 401 });
+  }
 
-  const users = await prisma.project.findMany();
+  const users = await prisma.project.findMany({
+    include: {
+      projectContribution: {
+        include: {
+          user: true,
+        },
+      },
+    },
+  });
 
   return NextResponse.json(users);
 }

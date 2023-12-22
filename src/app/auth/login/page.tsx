@@ -16,7 +16,7 @@ export default function Page() {
       <div className="max-w-screen-lg w-full flex items-center justify-between gap-10 p-10 sm:py-36">
         <div>
           <h1 className="text-3xl font-bold mb-10">Login</h1>
-          <Button onClick={() => signIn("github")} fullWidth>
+          <Button onClick={() => signIn("github")} fullWidth size="large">
             Continuar com Github
           </Button>
           <div className="mt-4 underline">
