@@ -18,7 +18,7 @@ export const Header = () => {
         aria-label="Global"
       >
         <div className="hidden lg:flex lg:gap-x-12">
-          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
+          <a href="/" className="text-sm font-semibold leading-6 text-gray-900">
             Projetos
           </a>
           <button

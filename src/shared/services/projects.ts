@@ -24,3 +24,19 @@ export const useProjects = () => {
     }
   );
 };
+
+export const useFindProject = (projectId: string) => {
+  return useQuery(
+    [QueryCaches.PROJECTS, projectId],
+    async () => {
+      const { data } = await axiosInstance.get<IProject>(
+        `project/${projectId}`
+      );
+
+      return data;
+    },
+    {
+      staleTime: 60 * 60 * 1000,
+    }
+  );
+};

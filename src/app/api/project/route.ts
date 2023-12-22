@@ -3,7 +3,7 @@ import { prisma } from "@/shared/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/options";
 
-interface IProject {
+export interface IProject {
   userId: string;
   name: string;
   description: string;
@@ -33,9 +33,9 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
 
-  if (!session) {
-    return NextResponse.json({ status: 401 });
-  }
+  // if (!session) {
+  //   return NextResponse.json({ status: 401 });
+  // }
 
   const users = await prisma.project.findMany();
 
