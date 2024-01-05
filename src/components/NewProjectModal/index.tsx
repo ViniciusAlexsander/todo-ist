@@ -1,10 +1,11 @@
 "use client";
 
 import { axiosInstance } from "@/shared/lib/axios";
-import { QueryCaches, queryClient } from "@/shared/lib/reactQuery";
+import { QueryCaches } from "@/shared/lib/reactQuery";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useRef, useState } from "react";
 import { Button } from "../Button";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface INewProjectModalProps {
   modalOpen: boolean;
@@ -20,6 +21,8 @@ export const NewProjectModal = ({
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const queryClient = useQueryClient();
+
   const handleCriarTarefa = async () => {
     try {
       setLoading(true);
@@ -28,7 +31,7 @@ export const NewProjectModal = ({
         name,
       });
       setLoading(false);
-      queryClient.invalidateQueries(QueryCaches.PROJECTS);
+      queryClient.invalidateQueries({ queryKey: [QueryCaches.PROJECTS] });
       setName("");
       setDescription("");
       handleCloseModal();
@@ -111,6 +114,7 @@ export const NewProjectModal = ({
                       Cancelar
                     </button>
                     <Button
+                      size="medium"
                       onClick={handleCriarTarefa}
                       fullWidth
                       loading={loading}

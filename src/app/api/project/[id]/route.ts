@@ -3,6 +3,10 @@ import { prisma } from "@/shared/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]/options";
 
+// const get = (req, context) => createApiMethod(req, context, (session) => {
+
+// })
+
 export async function GET(req: Request, context: { params: any }) {
   const session = await getServerSession(authOptions);
   const id = context.params.id;
@@ -17,18 +21,25 @@ export async function GET(req: Request, context: { params: any }) {
     });
   }
 
-  let project = await prisma.project.findFirst({
-    include: {
-      projectContribution: {
-        include: {
-          user: true,
+  const [project] = await prisma.$transaction([
+    prisma.project.findFirst({
+      include: {
+        projectContribution: {
+          include: {
+            user: true,
+          },
+        },
+        tasks: {
+          include: {
+            status: true,
+          },
         },
       },
-    },
-    where: {
-      id,
-    },
-  });
+      where: {
+        id,
+      },
+    }),
+  ]);
 
   if (!project) {
     return NextResponse.json({

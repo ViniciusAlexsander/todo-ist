@@ -41,7 +41,7 @@ export default function Page() {
                 <b>Descrição: </b>
                 {project.description}
               </p>
-              <div>
+              {/* <div>
                 <b>Contribuidores: </b>
                 <div className="mt-2">
                   {project.projectContribution.length > 0 && (
@@ -76,7 +76,7 @@ export default function Page() {
                     </Button>
                   )}
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         ))}

@@ -8,6 +8,7 @@ export interface IProject {
   createdAt: Date;
   updatedAt: Date;
   projectContribution: ProjectContribution[];
+  tasks: Task[];
 }
 
 export interface ProjectContribution {
@@ -15,4 +16,21 @@ export interface ProjectContribution {
   userId: string;
   projectId: string;
   user: User;
+}
+
+export interface Task {
+  id: string;
+  projectId: string;
+  name: string;
+  description: string;
+  statusId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  status: Status;
+}
+export interface Status {
+  id: string;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
