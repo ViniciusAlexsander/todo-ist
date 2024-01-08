@@ -11,9 +11,9 @@ export async function GET(req: Request, context: { params: any }) {
   const session = await getServerSession(authOptions);
   const id = context.params.id;
 
-  if (!session) {
-    return NextResponse.json({ status: 401 });
-  }
+  // if (!session) {
+  //   return NextResponse.json({ status: 401 });
+  // }
 
   if (!id) {
     return NextResponse.json({
