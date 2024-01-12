@@ -1,17 +1,11 @@
-import { NextResponse, NextRequest } from "next/server";
 import { prisma } from "@/shared/lib/prisma";
 import { getServerSession } from "next-auth";
+import { NextResponse } from "next/server";
 import { authOptions } from "../../../../auth/[...nextauth]/options";
-
-interface IParams {
-  id: string;
-  taskId: string;
-}
 
 // const get = (req, context) => createApiMethod(req, context, (session) => {
 
 // })
-
 export async function GET(req: Request, context: { params: IParams }) {
   const session = await getServerSession(authOptions);
   const { id, taskId } = context.params;
@@ -44,24 +38,21 @@ export async function GET(req: Request, context: { params: IParams }) {
   return NextResponse.json(task);
 }
 
-export async function POST(req: Request, context: { params: IParams }) {
+export async function DELETE(req: Request, context: { params: IParams }) {
   const session = await getServerSession(authOptions);
-  const { id, taskId } = context.params;
+  const { id: projectId, taskId } = context.params;
 
   // if (!session) {
   //   return NextResponse.json({ status: 401 });
   // }
 
-  if (!id || !taskId) {
+  if (!projectId) {
     return NextResponse.json({
-      message: "id and taskId are required",
+      message: "taskId are required",
     });
   }
 
-  const task = await prisma.task.findFirst({
-    include: {
-      status: true,
-    },
+  let task = await prisma.task.findFirst({
     where: {
       id: taskId,
     },
@@ -73,42 +64,18 @@ export async function POST(req: Request, context: { params: IParams }) {
     });
   }
 
-  return NextResponse.json(task);
-}
-
-export async function DELETE(req: Request, context: { params: any }) {
-  const session = await getServerSession(authOptions);
-  const id = context.params.id;
-
-  if (!session) {
-    return NextResponse.json({ status: 401 });
-  }
-
-  if (!id) {
-    return NextResponse.json({
-      message: "id are required",
-    });
-  }
-
-  let project = await prisma.project.findFirst({
+  await prisma.task.delete({
     where: {
-      id,
-    },
-  });
-
-  if (!project) {
-    return NextResponse.json({
-      message: "project not found",
-    });
-  }
-
-  await prisma.project.delete({
-    where: {
-      id,
+      id: taskId,
     },
   });
 
   return NextResponse.json({
-    message: "Successfully deleted project",
+    message: "Successfully deleted task",
   });
+}
+
+interface IParams {
+  id: string;
+  taskId: string;
 }

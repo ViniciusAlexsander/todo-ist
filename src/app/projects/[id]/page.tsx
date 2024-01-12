@@ -6,9 +6,11 @@ import { Task } from "@/shared/models/project";
 import Image from "next/image";
 import Link from "next/link";
 import { TaskBoard } from "./taskBoard";
+import { TaskStatusEnum } from "@/shared/enum/taskStatusEnum";
 
 export default function Page({ params }: { params: { id: string } }) {
-  const { data, isLoading } = useFindProject(params.id);
+  const { id: projectId } = params;
+  const { data, isLoading } = useFindProject(projectId);
 
   if (isLoading) return <div>isLoading</div>;
 
@@ -82,12 +84,24 @@ export default function Page({ params }: { params: { id: string } }) {
       </div>
 
       <div className="w-3/4 grid grid-cols-3 gap-4 mt-10">
-        <TaskBoard tasks={tasksGroupedByStatus.Todo} title="Todo" />
+        <TaskBoard
+          tasks={tasksGroupedByStatus.Todo}
+          title="Todo"
+          projectId={projectId}
+          statusId={TaskStatusEnum.DONE}
+        />
         <TaskBoard
           tasks={tasksGroupedByStatus["In Progress"]}
           title="In Progress"
+          projectId={projectId}
+          statusId={TaskStatusEnum.IN_PROGRESS}
         />
-        <TaskBoard tasks={tasksGroupedByStatus.Done} title="Done" />
+        <TaskBoard
+          tasks={tasksGroupedByStatus.Done}
+          title="Done"
+          projectId={projectId}
+          statusId={TaskStatusEnum.DONE}
+        />
       </div>
     </div>
   );
