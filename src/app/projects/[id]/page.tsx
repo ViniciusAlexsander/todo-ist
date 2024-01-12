@@ -88,7 +88,7 @@ export default function Page({ params }: { params: { id: string } }) {
           tasks={tasksGroupedByStatus.Todo}
           title="Todo"
           projectId={projectId}
-          statusId={TaskStatusEnum.DONE}
+          statusId={TaskStatusEnum.TODO}
         />
         <TaskBoard
           tasks={tasksGroupedByStatus["In Progress"]}

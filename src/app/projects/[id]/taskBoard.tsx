@@ -26,7 +26,7 @@ export const TaskBoard = ({
 
   const queryClient = useQueryClient();
 
-  const handleCriarTarefa = async () => {
+  const handleCreateTask = async () => {
     try {
       setLoading(true);
       const response = await axiosInstance.post(`project/${projectId}/task`, {
@@ -45,6 +45,22 @@ export const TaskBoard = ({
     }
   };
 
+  const handleDeleteTask = async (taskId: string) => {
+    try {
+      setLoading(true);
+      const response = await axiosInstance.delete(
+        `project/${projectId}/task/${taskId}`
+      );
+
+      setLoading(false);
+      queryClient.invalidateQueries({ queryKey: [QueryCaches.PROJECTS] });
+      setName("");
+      setDescription("");
+    } catch (error) {
+      window.alert("Erro ao excluir tarefa, tente novamente mais tarde");
+    }
+  };
+
   return (
     <div>
       <div className="flex items-baseline mb-4 text-primary">
@@ -56,13 +72,18 @@ export const TaskBoard = ({
           key={task.id}
           className="border rounded border-border bg-surfaces p-2 mb-3 shadow "
         >
-          <p>{task.name}</p>
-          <p>{task.description}</p>
+          <div className="flex justify-end">
+            <button onClick={() => handleDeleteTask(task.id)}>x</button>
+          </div>
+          <div>
+            <p>{task.name}</p>
+            <p>{task.description}</p>
+          </div>
         </div>
       ))}
       {adicionando ? (
-        <div className="border rounded border-border bg-surfaces p-2 mb-3 shadow ">
-          <div className="flex flex-col gap-1">
+        <div className="border rounded border-border bg-surfaces  mb-3 shadow ">
+          <div className="flex flex-col gap-1 p-2">
             <input
               type="text"
               placeholder="Nome da tarefa"
@@ -74,8 +95,10 @@ export const TaskBoard = ({
               onChange={(e) => setDescription(e.target.value)}
             />
           </div>
-          <button onClick={() => setAdicionando(false)}>X</button>
-          <button onClick={handleCriarTarefa}>{"->"}</button>
+          <div className="flex justify-between border-t border-border p-2">
+            <button onClick={() => setAdicionando(false)}>Cancelar</button>
+            <button onClick={handleCreateTask}>Adicionar</button>
+          </div>
         </div>
       ) : (
         <div className="p-2">
