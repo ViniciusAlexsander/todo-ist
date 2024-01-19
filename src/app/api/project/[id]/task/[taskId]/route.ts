@@ -75,6 +75,56 @@ export async function DELETE(req: Request, context: { params: IParams }) {
   });
 }
 
+export interface IPutRequest {
+  name: string;
+  description?: string;
+  statusId: string;
+}
+
+export async function PUT(req: Request, context: { params: IParams }) {
+  const session = await getServerSession(authOptions);
+  const { id: projectId, taskId } = context.params;
+  const { description, name, statusId }: Partial<IPutRequest> =
+    await req.json();
+
+  // if (!session) {
+  //   return NextResponse.json({ status: 401 });
+  // }
+
+  if (!projectId) {
+    return NextResponse.json({
+      message: "taskId are required",
+    });
+  }
+
+  let task = await prisma.task.findFirst({
+    where: {
+      id: taskId,
+    },
+  });
+
+  if (!task) {
+    return NextResponse.json({
+      message: "task not found",
+    });
+  }
+
+  await prisma.task.update({
+    data: {
+      description,
+      name,
+      statusId,
+    },
+    where: {
+      id: taskId,
+    },
+  });
+
+  return NextResponse.json({
+    message: "Successfully updated task",
+  });
+}
+
 interface IParams {
   id: string;
   taskId: string;

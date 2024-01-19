@@ -1,5 +1,6 @@
 "use client";
 
+import { TaskStatusEnum, obterStatus } from "@/shared/enum/taskStatusEnum";
 import { axiosInstance } from "@/shared/lib/axios";
 import { QueryCaches } from "@/shared/lib/reactQuery";
 import { Task } from "@/shared/models/project";
@@ -10,7 +11,7 @@ interface ITaskBoardProps {
   tasks: Task[];
   title: string;
   projectId: string;
-  statusId: string;
+  statusId: TaskStatusEnum;
 }
 
 export const TaskBoard = ({
@@ -61,6 +62,35 @@ export const TaskBoard = ({
     }
   };
 
+  const handleUpdateTask = async ({
+    taskId,
+    newStatus,
+  }: {
+    taskId: string;
+    newStatus: string;
+  }) => {
+    try {
+      setLoading(true);
+      const response = await axiosInstance.put(
+        `project/${projectId}/task/${taskId}`,
+        {
+          statusId: newStatus,
+        }
+      );
+
+      setLoading(false);
+      queryClient.invalidateQueries({ queryKey: [QueryCaches.PROJECTS] });
+      setName("");
+      setDescription("");
+    } catch (error) {
+      window.alert("Erro ao excluir tarefa, tente novamente mais tarde");
+    }
+  };
+
+  const dadosAtualizacao = obterStatus[statusId];
+
+  console.log({ dadosAtualizacao });
+
   return (
     <div>
       <div className="flex items-baseline mb-4 text-primary">
@@ -79,6 +109,20 @@ export const TaskBoard = ({
             <p>{task.name}</p>
             <p>{task.description}</p>
           </div>
+          {statusId !== TaskStatusEnum.DONE && (
+            <div>
+              <button
+                onClick={() => {
+                  handleUpdateTask({
+                    newStatus: dadosAtualizacao.proxStatus,
+                    taskId: task.id,
+                  });
+                }}
+              >
+                {dadosAtualizacao.nomeBotao}
+              </button>
+            </div>
+          )}
         </div>
       ))}
       {adicionando ? (
