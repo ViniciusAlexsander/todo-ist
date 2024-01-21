@@ -1,6 +1,6 @@
-import { NextResponse, NextRequest } from "next/server";
-import { prisma } from "@/shared/lib/prisma";
+import prisma from "@/shared/lib/prisma";
 import { getServerSession } from "next-auth";
+import { NextResponse } from "next/server";
 import { authOptions } from "../../../auth/[...nextauth]/options";
 
 // const get = (req, context) => createApiMethod(req, context, (session) => {
