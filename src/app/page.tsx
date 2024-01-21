@@ -16,9 +16,14 @@ export default function Page() {
 
   if (isLoading) return <div>isLoading</div>;
 
+  if (data && data.length === 0) {
+    return <div>sem projetos, crie um novo</div>;
+  }
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-10">
       {data &&
+        data.length > 0 &&
         data?.map((project) => (
           <div
             key={project.id}
