@@ -15,9 +15,7 @@ export default function Page({ params }: { params: { id: string } }) {
   if (isLoading) return <div>isLoading</div>;
 
   let tasksGroupedByStatus: {
-    "In Progress": Task[];
-    Todo: Task[];
-    Done: Task[];
+    [status: string]: Task[];
   } = {
     "In Progress": [],
     Done: [],

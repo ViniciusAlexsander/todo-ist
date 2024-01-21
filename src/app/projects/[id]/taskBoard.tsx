@@ -64,11 +64,16 @@ export const TaskBoard = ({
 
   const handleDragStart = (event: DragEvent<HTMLDivElement>) => {
     event.dataTransfer.setData("text", event.target.id);
-    console.log(event.target.id);
   };
 
   const handleDrop = (event: DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
+    console.log("handleDrop", event.target.id);
+    if (event.target.id) {
+      console.log("entrou no if");
+      event.preventDefault();
+      return;
+    }
+
     var data = event.dataTransfer.getData("text");
     event.target.appendChild(document.getElementById(data));
   };
@@ -89,20 +94,19 @@ export const TaskBoard = ({
         onDragOver={(event) => handleDragOver(event)}
       >
         {tasks.map((task) => (
-          <div key={task.id}>
-            <div
-              id={task.id}
-              className="border rounded border-border bg-surfaces p-2 mb-3 shadow"
-              draggable="true"
-              onDragStart={(event) => handleDragStart(event)}
-            >
-              <div className="flex justify-end">
-                <button onClick={() => handleDeleteTask(task.id)}>x</button>
-              </div>
-              <div>
-                <p>{task.name}</p>
-                <p>{task.description}</p>
-              </div>
+          <div
+            id={`task-${task.id}`}
+            key={task.id}
+            className="border rounded border-border bg-surfaces p-2 mb-3 shadow"
+            draggable="true"
+            onDragStart={(event) => handleDragStart(event)}
+          >
+            <div className="flex justify-end">
+              <button onClick={() => handleDeleteTask(task.id)}>x</button>
+            </div>
+            <div>
+              <p>{task.name}</p>
+              <p>{task.description}</p>
             </div>
           </div>
         ))}
