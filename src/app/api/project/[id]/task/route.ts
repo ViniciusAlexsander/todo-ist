@@ -15,13 +15,16 @@ export interface IPostRequest {
 
 export async function POST(req: Request, context: { params: IParams }) {
   const session = await getServerSession(authOptions);
-  const { description, name, statusId }: Partial<IPostRequest> =
-    await req.json();
+  const {
+    description = "",
+    name,
+    statusId,
+  }: Partial<IPostRequest> = await req.json();
   const { id: projectId } = context.params;
 
-  // if (!session) {
-  //   return NextResponse.json({ status: 401 });
-  // }
+  if (!session) {
+    return NextResponse.json({ status: 401 });
+  }
 
   if (!name || !projectId || !statusId) {
     return NextResponse.json({
@@ -32,7 +35,7 @@ export async function POST(req: Request, context: { params: IParams }) {
   const project = await prisma.project.findFirst({
     where: {
       id: projectId,
-      // userId: session.user.id,
+      userId: session.user.id,
     },
   });
 
@@ -43,19 +46,19 @@ export async function POST(req: Request, context: { params: IParams }) {
   }
 
   const newTask = await prisma.task.create({
-    data: { name, projectId, statusId, description: description || "" },
+    data: { name, projectId, statusId, description: description },
   });
 
   return NextResponse.json(newTask);
 }
 
-export async function GET(req: Request, context: { params: IParams }) {
+export async function GET(_req: Request, context: { params: IParams }) {
   const session = await getServerSession(authOptions);
   const { id: projectId } = context.params;
 
-  // if (!session) {
-  //   return NextResponse.json({ status: 401 });
-  // }
+  if (!session || projectId) {
+    return NextResponse.json({ status: 401 });
+  }
 
   if (!projectId) {
     return NextResponse.json({
@@ -66,7 +69,9 @@ export async function GET(req: Request, context: { params: IParams }) {
   const tasks = await prisma.task.findMany({
     where: {
       projectId,
-      // userId: session.user.id,
+      project: {
+        userId: session.user.id,
+      },
     },
   });
 

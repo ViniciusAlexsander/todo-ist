@@ -1,13 +1,13 @@
 import prisma from "@/shared/lib/prisma";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import { authOptions } from "../../../../auth/[...nextauth]/options";
+import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 
 // const get = (req, context) => createApiMethod(req, context, (session) => {
 
 // })
-export async function GET(req: Request, context: { params: IParams }) {
-  const session = await getServerSession(authOptions);
+export async function GET(_req: Request, context: { params: IParams }) {
+  // const session = await getServerSession(authOptions);
   const { id, taskId } = context.params;
 
   // if (!session) {
@@ -38,15 +38,15 @@ export async function GET(req: Request, context: { params: IParams }) {
   return NextResponse.json(task);
 }
 
-export async function DELETE(req: Request, context: { params: IParams }) {
-  const session = await getServerSession(authOptions);
+export async function DELETE(_req: Request, context: { params: IParams }) {
+  // const session = await getServerSession(authOptions);
   const { id: projectId, taskId } = context.params;
 
   // if (!session) {
   //   return NextResponse.json({ status: 401 });
   // }
 
-  if (!projectId) {
+  if (!projectId || !taskId) {
     return NextResponse.json({
       message: "taskId are required",
     });
@@ -82,7 +82,7 @@ export interface IPutRequest {
 }
 
 export async function PUT(req: Request, context: { params: IParams }) {
-  const session = await getServerSession(authOptions);
+  // const session = await getServerSession(authOptions);
   const { id: projectId, taskId } = context.params;
   const { description, name, statusId }: Partial<IPutRequest> =
     await req.json();
@@ -91,7 +91,7 @@ export async function PUT(req: Request, context: { params: IParams }) {
   //   return NextResponse.json({ status: 401 });
   // }
 
-  if (!projectId) {
+  if (!projectId || !taskId) {
     return NextResponse.json({
       message: "taskId are required",
     });
@@ -111,9 +111,9 @@ export async function PUT(req: Request, context: { params: IParams }) {
 
   await prisma.task.update({
     data: {
-      description,
-      name,
-      statusId,
+      description: description || task.description,
+      name: name || task.name,
+      statusId: statusId || task.statusId,
     },
     where: {
       id: taskId,

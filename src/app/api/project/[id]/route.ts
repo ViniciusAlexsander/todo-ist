@@ -1,19 +1,19 @@
-import prisma from "@/shared/lib/prisma";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
+import prisma from "@/shared/lib/prisma";
 import { authOptions } from "../../auth/[...nextauth]/options";
 
 // const get = (req, context) => createApiMethod(req, context, (session) => {
 
 // })
 
-export async function GET(req: Request, context: { params: any }) {
+export async function GET(_req: Request, context: { params: IParams }) {
   const session = await getServerSession(authOptions);
-  const id = context.params.id;
+  const { id } = context.params;
 
-  // if (!session) {
-  //   return NextResponse.json({ status: 401 });
-  // }
+  if (!session || !session.user.id || !id) {
+    return NextResponse.json({ status: 401 });
+  }
 
   if (!id) {
     return NextResponse.json({
@@ -37,6 +37,7 @@ export async function GET(req: Request, context: { params: any }) {
       },
       where: {
         id,
+        userId: session.user.id,
       },
     }),
   ]);
@@ -50,11 +51,11 @@ export async function GET(req: Request, context: { params: any }) {
   return NextResponse.json(project);
 }
 
-export async function DELETE(req: Request, context: { params: any }) {
+export async function DELETE(_req: Request, context: { params: IParams }) {
   const session = await getServerSession(authOptions);
-  const id = context.params.id;
+  const { id } = context.params;
 
-  if (!session) {
+  if (!session || !session.user.id || !id) {
     return NextResponse.json({ status: 401 });
   }
 
@@ -67,6 +68,7 @@ export async function DELETE(req: Request, context: { params: any }) {
   let project = await prisma.project.findFirst({
     where: {
       id,
+      userId: session.user.id,
     },
   });
 
@@ -79,10 +81,15 @@ export async function DELETE(req: Request, context: { params: any }) {
   await prisma.project.delete({
     where: {
       id,
+      userId: session.user.id,
     },
   });
 
   return NextResponse.json({
     message: "Successfully deleted project",
   });
+}
+
+interface IParams {
+  id: string;
 }
