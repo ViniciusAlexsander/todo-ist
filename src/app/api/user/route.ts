@@ -7,9 +7,9 @@ export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
   const name = req.nextUrl.searchParams.get("name");
 
-  if (!session) {
-    return NextResponse.json({ status: 401 });
-  }
+  // if (!session) {
+  //   return NextResponse.json({ status: 401 });
+  // }
 
   if (!name) {
     return NextResponse.json({
@@ -18,6 +18,11 @@ export async function GET(req: NextRequest) {
   }
 
   const users = await prisma.user.findMany({
+    select: {
+      id: true,
+      name: true,
+      image: true,
+    },
     where: {
       name: {
         contains: name,
