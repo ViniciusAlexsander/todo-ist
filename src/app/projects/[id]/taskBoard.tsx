@@ -89,8 +89,6 @@ export const TaskBoard = ({
 
   const dadosAtualizacao = obterStatus[statusId];
 
-  console.log({ dadosAtualizacao });
-
   return (
     <div>
       <div className="flex items-baseline mb-4 text-primary">

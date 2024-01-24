@@ -5,31 +5,32 @@ import { authOptions } from "../auth/[...nextauth]/options";
 
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
-  const name = req.nextUrl.searchParams.get("name");
+  const email = req.nextUrl.searchParams.get("email");
 
-  // if (!session) {
-  //   return NextResponse.json({ status: 401 });
-  // }
+  if (!session || !session.user) {
+    return NextResponse.json({ error: "session not found" }, { status: 401 });
+  }
 
-  if (!name) {
-    return NextResponse.json({
-      message: "name is required",
-    });
+  if (!email) {
+    return NextResponse.json({ error: "email is required" }, { status: 500 });
   }
 
   const users = await prisma.user.findMany({
     select: {
       id: true,
       name: true,
+      email: true,
       image: true,
     },
     where: {
-      name: {
-        contains: name,
+      email: {
+        contains: email,
         mode: "insensitive",
       },
     },
   });
 
-  return NextResponse.json(users);
+  return NextResponse.json(
+    users.filter((user) => user.id !== session?.user.id)
+  );
 }

@@ -1,15 +1,20 @@
 "use client";
 
 import { Button } from "@/components/Button";
-import { useFindProject } from "@/shared/services/projects";
+import { TaskStatusEnum } from "@/shared/enum/taskStatusEnum";
 import { Task } from "@/shared/models/project";
+import { useFindProject } from "@/shared/services/projects";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import { ModalNewContribution } from "./modalNewContribution";
 import { TaskBoard } from "./taskBoard";
-import { TaskStatusEnum } from "@/shared/enum/taskStatusEnum";
 
 export default function Page({ params }: { params: { id: string } }) {
   const { id: projectId } = params;
+  const [openModalNewContribution, setOpenModalNewContribution] =
+    useState(false);
+
   const { data, isLoading } = useFindProject(projectId);
 
   if (isLoading) return <div>isLoading</div>;
@@ -31,8 +36,17 @@ export default function Page({ params }: { params: { id: string } }) {
     tasksGroupedByStatus[statusName].push(task);
   });
 
+  const handleOpenModalNewContribution = () => {
+    setOpenModalNewContribution(true);
+  };
+
   return (
     <div className="pt-0 p-10">
+      <ModalNewContribution
+        modalOpen={openModalNewContribution}
+        handleCloseModal={() => setOpenModalNewContribution(false)}
+        projectId={projectId}
+      />
       <div className="w-full flex justify-between mt-5">
         <div>
           <h1 className="text-xl font-bold text-primary">{data?.name}</h1>
@@ -54,17 +68,14 @@ export default function Page({ params }: { params: { id: string } }) {
                     />
                   ))}
                 </div>
-                <Button
-                  onClick={() => window.alert("precisa ser feito")}
-                  size="small"
-                >
+                <Button onClick={handleOpenModalNewContribution} size="small">
                   +
                 </Button>
               </div>
             )}
             {data && data.projectContribution.length === 0 && (
               <Button
-                onClick={() => window.alert("precisa ser feito")}
+                onClick={handleOpenModalNewContribution}
                 size="small"
                 fullWidth
               >
