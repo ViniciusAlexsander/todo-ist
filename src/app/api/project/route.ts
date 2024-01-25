@@ -23,19 +23,38 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  const newProject = await prisma.project.create({
-    data: {
-      description,
-      name,
-      user: {
-        connect: {
-          id: session.user.id,
+  const [newProject, ownerRole] = await prisma.$transaction([
+    prisma.project.create({
+      data: {
+        description,
+        name,
+        user: {
+          connect: {
+            id: session.user.id,
+          },
         },
       },
+    }),
+    prisma.role.findFirst({
+      where: {
+        description: "Owner",
+      },
+    }),
+  ]);
+
+  if (!ownerRole) {
+    return NextResponse.json({ error: "ownerRole not found" }, { status: 500 });
+  }
+
+  const projectContribution = await prisma.project_Contribution.create({
+    data: {
+      projectId: newProject.id,
+      userId: session.user.id,
+      roleId: ownerRole?.id,
     },
   });
 
-  return NextResponse.json({ id: newProject.id });
+  return NextResponse.json({ id: projectContribution.id });
 }
 
 export async function GET(_req: NextRequest) {
@@ -45,9 +64,9 @@ export async function GET(_req: NextRequest) {
     return NextResponse.json({ status: 401 });
   }
 
-  const projects = await prisma.project.findMany({
+  const projectContribution = await prisma.project_Contribution.findMany({
     include: {
-      projectContribution: {
+      project: {
         include: {
           user: true,
         },
@@ -58,5 +77,9 @@ export async function GET(_req: NextRequest) {
     },
   });
 
-  return NextResponse.json(projects);
+  return NextResponse.json(
+    projectContribution.map(
+      (projectContribution) => projectContribution.project
+    )
+  );
 }

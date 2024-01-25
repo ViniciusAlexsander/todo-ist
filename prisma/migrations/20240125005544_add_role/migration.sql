@@ -47,7 +47,7 @@ CREATE TABLE "VerificationToken" (
 -- CreateTable
 CREATE TABLE "Project" (
     "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
+    "createdBy" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -61,6 +61,7 @@ CREATE TABLE "Project_Contribution" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "projectId" TEXT NOT NULL,
+    "roleId" TEXT NOT NULL,
 
     CONSTRAINT "Project_Contribution_pkey" PRIMARY KEY ("id")
 );
@@ -68,6 +69,7 @@ CREATE TABLE "Project_Contribution" (
 -- CreateTable
 CREATE TABLE "Permission" (
     "id" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
 
     CONSTRAINT "Permission_pkey" PRIMARY KEY ("id")
 );
@@ -75,8 +77,18 @@ CREATE TABLE "Permission" (
 -- CreateTable
 CREATE TABLE "Role" (
     "id" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
 
     CONSTRAINT "Role_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Role_Permission" (
+    "id" TEXT NOT NULL,
+    "roleId" TEXT NOT NULL,
+    "permissionId" TEXT NOT NULL,
+
+    CONSTRAINT "Role_Permission_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -124,13 +136,22 @@ ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId"
 ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Project" ADD CONSTRAINT "Project_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Project" ADD CONSTRAINT "Project_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Project_Contribution" ADD CONSTRAINT "Project_Contribution_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Project_Contribution" ADD CONSTRAINT "Project_Contribution_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Project_Contribution" ADD CONSTRAINT "Project_Contribution_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "Role"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Role_Permission" ADD CONSTRAINT "Role_Permission_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "Role"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Role_Permission" ADD CONSTRAINT "Role_Permission_permissionId_fkey" FOREIGN KEY ("permissionId") REFERENCES "Permission"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Task" ADD CONSTRAINT "Task_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE CASCADE ON UPDATE CASCADE;

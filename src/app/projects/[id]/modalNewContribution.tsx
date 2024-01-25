@@ -3,6 +3,7 @@
 import { Button } from "@/components/Button";
 import { axiosInstance } from "@/shared/lib/axios";
 import { QueryCaches } from "@/shared/lib/reactQuery";
+import { useRoles } from "@/shared/services/roles";
 import { useFindUser } from "@/shared/services/user";
 import { Dialog, Transition } from "@headlessui/react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -24,11 +25,13 @@ export const ModalNewContribution = ({
   const cancelButtonRef = useRef(null);
   const [emailSearch, setEmailSearch] = useState("");
   const [userIdSelected, setUserIdSelect] = useState<string | null>(null);
+  const [roleId, setRoleId] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
 
   const queryClient = useQueryClient();
 
-  const { data } = useFindUser(emailSearch);
+  const { data: roles } = useRoles();
+  const { data: collaborators } = useFindUser(emailSearch);
 
   const handleSelectContributionChange = (e) => {
     setUserIdSelect(e.target.value);
@@ -38,7 +41,8 @@ export const ModalNewContribution = ({
     try {
       setLoading(true);
       await axiosInstance.post("project/contribution", {
-        projectId: projectId,
+        projectId,
+        roleId,
         userId: userIdSelected,
       });
       queryClient.invalidateQueries({ queryKey: [QueryCaches.PROJECTS] });
@@ -104,39 +108,59 @@ export const ModalNewContribution = ({
                       />
                     </label>
                   </form>
-                  {data && data.length > 0 && (
+                  {collaborators && collaborators.length > 0 && (
                     <div className="mt-6">
                       <p className="font-bold text-copy-primary text-sm">
                         Selecione o novo colaborador
                       </p>
 
                       <div>
-                        {data.map((user) => (
-                          <div key={user.id} className="flex gap-x-3">
+                        {collaborators.map((collaborator) => (
+                          <div key={collaborator.id} className="flex gap-x-3">
                             <input
                               type="radio"
-                              id={user.id}
-                              value={user.id}
+                              id={collaborator.id}
+                              value={collaborator.id}
                               name="Contribution"
-                              checked={userIdSelected === user.id}
+                              checked={userIdSelected === collaborator.id}
                               onChange={handleSelectContributionChange}
                             />
                             <Image
-                              src={user.image}
-                              alt={`Avatar de ${user.name}`}
+                              src={collaborator.image}
+                              alt={`Avatar de ${collaborator.name}`}
                               width="30"
                               height="30"
                               className="rounded-3xl"
                             />
                             <p>
                               <strong>Email: </strong>
-                              {user.email}
+                              {collaborator.email}
                             </p>
                           </div>
                         ))}
                       </div>
                     </div>
                   )}
+                  <div className="mt-6">
+                    <p className="font-bold text-copy-primary text-sm">
+                      Selecione o papel do colaborador
+                    </p>
+
+                    <select
+                      className="w-full"
+                      value={roleId} // ...force the select's value to match the state variable...
+                      onChange={(e) => setRoleId(e.target.value)} // ... and update the state variable on any change!
+                    >
+                      <option value="">Selecione o papel</option>
+
+                      {roles &&
+                        roles.map((role) => (
+                          <option key={role.id} value={role.id}>
+                            {role.description}
+                          </option>
+                        ))}
+                    </select>
+                  </div>
                   <div className="w-full flex justify-between gap-x-3 mt-6">
                     <button
                       type="button"
@@ -151,7 +175,7 @@ export const ModalNewContribution = ({
                       onClick={handleSearchContribution}
                       fullWidth
                       loading={loading}
-                      disabled={!userIdSelected}
+                      disabled={!userIdSelected || !roleId}
                     >
                       Criar projeto
                     </Button>

@@ -1,7 +1,7 @@
 export enum TaskStatusEnum {
-  TODO = "clrpo2f4n00006ahroy1xq6rl",
-  IN_PROGRESS = "clrpo416i00016ahr5kaqkoar",
-  DONE = "clrpo5nnh00026ahr71j6yusy",
+  TODO = "clrslqlgy0000j6ej0c2lxdbp",
+  IN_PROGRESS = "clrslqlgz0001j6ejapd8tiuq",
+  DONE = "clrslqlgz0002j6ejvujc157u",
 }
 
 export const obterStatus: {

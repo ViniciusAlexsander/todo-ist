@@ -6,22 +6,21 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 export interface IProjectContribution {
   userId: string;
   projectId: string;
+  roleId: string;
 }
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
-  const { projectId, userId }: Partial<IProjectContribution> = await req.json();
+  const { projectId, userId, roleId }: Partial<IProjectContribution> =
+    await req.json();
 
   if (!session || !session.user) {
-    return NextResponse.json(
-      { error: "session not found" },
-      { status: 401 }
-    );
+    return NextResponse.json({ error: "session not found" }, { status: 401 });
   }
 
-  if (!projectId || !userId) {
+  if (!projectId || !userId || !roleId) {
     return NextResponse.json(
-      { error: "projectId and userId are required" },
+      { error: "projectId, roleId and userId are required" },
       { status: 500 }
     );
   }
@@ -67,6 +66,7 @@ export async function POST(req: NextRequest) {
     data: {
       projectId,
       userId,
+      roleId,
     },
   });
 

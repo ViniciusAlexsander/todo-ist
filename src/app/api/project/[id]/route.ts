@@ -21,31 +21,42 @@ export async function GET(_req: Request, context: { params: IParams }) {
     });
   }
 
-  const [project] = await prisma.$transaction([
-    prisma.project.findFirst({
-      include: {
-        projectContribution: {
-          include: {
-            user: true,
-          },
-        },
-        tasks: {
-          include: {
-            status: true,
-          },
+  const projectContribution = await prisma.project_Contribution.findFirst({
+    where: {
+      userId: session.user.id,
+      AND: {
+        projectId: id,
+      },
+    },
+  });
+
+  if (!projectContribution) {
+    return NextResponse.json(
+      { error: "you don't have access to this project" },
+      { status: 500 }
+    );
+  }
+
+  const project = await prisma.project.findFirst({
+    include: {
+      projectContribution: {
+        include: {
+          user: true,
         },
       },
-      where: {
-        id,
-        userId: session.user.id,
+      tasks: {
+        include: {
+          status: true,
+        },
       },
-    }),
-  ]);
+    },
+    where: {
+      id,
+    },
+  });
 
   if (!project) {
-    return NextResponse.json({
-      message: "project not found",
-    });
+    return NextResponse.json({ error: "project not found" }, { status: 500 });
   }
 
   return NextResponse.json(project);

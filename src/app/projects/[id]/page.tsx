@@ -15,9 +15,13 @@ export default function Page({ params }: { params: { id: string } }) {
   const [openModalNewContribution, setOpenModalNewContribution] =
     useState(false);
 
-  const { data, isLoading } = useFindProject(projectId);
+  const { data, isLoading, isError, error } = useFindProject(projectId);
 
   if (isLoading) return <div>isLoading</div>;
+
+  console.log(error);
+
+  if (isError) return <div>Você não tem acesso a esse projeto</div>;
 
   let tasksGroupedByStatus: { [status: string]: Task[] } = {
     "In Progress": [],
