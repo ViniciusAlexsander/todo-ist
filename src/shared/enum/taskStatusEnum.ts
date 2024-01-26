@@ -4,6 +4,12 @@ export enum TaskStatusEnum {
   DONE = "clrslqlgz0002j6ejvujc157u",
 }
 
+export enum TaskStatusNameEnum {
+  TODO = "TODO",
+  IN_PROGRESS = "IN_PROGRESS",
+  DONE = "DONE",
+}
+
 export const obterStatus: {
   [key: string]: {
     nomeBotao: string;

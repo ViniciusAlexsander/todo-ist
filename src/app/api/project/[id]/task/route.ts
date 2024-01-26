@@ -35,7 +35,7 @@ export async function POST(req: Request, context: { params: IParams }) {
   const project = await prisma.project.findFirst({
     where: {
       id: projectId,
-      userId: session.user.id,
+      // userId: session.user.id,
     },
   });
 
@@ -56,9 +56,9 @@ export async function GET(_req: Request, context: { params: IParams }) {
   const session = await getServerSession(authOptions);
   const { id: projectId } = context.params;
 
-  if (!session || projectId) {
-    return NextResponse.json({ status: 401 });
-  }
+  // if (!session || projectId) {
+  //   return NextResponse.json({ status: 401 });
+  // }
 
   if (!projectId) {
     return NextResponse.json({
@@ -70,7 +70,7 @@ export async function GET(_req: Request, context: { params: IParams }) {
     where: {
       projectId,
       project: {
-        userId: session.user.id,
+        // userId: session.user.id,
       },
     },
   });

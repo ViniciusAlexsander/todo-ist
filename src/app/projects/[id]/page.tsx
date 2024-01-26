@@ -29,9 +29,9 @@ export default function Page({ params }: { params: { id: string } }) {
   );
 
   let tasksGroupedByStatus: { [status: string]: Task[] } = {
-    "In Progress": [],
-    Done: [],
-    Todo: [],
+    IN_PROGRESS: [],
+    DONE: [],
+    TODO: [],
   };
 
   // Iterate through the tasks array and group tasks by status name
@@ -105,19 +105,19 @@ export default function Page({ params }: { params: { id: string } }) {
 
       <div className="w-3/4 grid grid-cols-3 gap-4 mt-10">
         <TaskBoard
-          tasks={tasksGroupedByStatus.Todo}
+          tasks={tasksGroupedByStatus.TODO}
           title="Todo"
           projectId={projectId}
           statusId={TaskStatusEnum.TODO}
         />
         <TaskBoard
-          tasks={tasksGroupedByStatus["In Progress"]}
+          tasks={tasksGroupedByStatus.IN_PROGRESS}
           title="In Progress"
           projectId={projectId}
           statusId={TaskStatusEnum.IN_PROGRESS}
         />
         <TaskBoard
-          tasks={tasksGroupedByStatus.Done}
+          tasks={tasksGroupedByStatus.DONE}
           title="Done"
           projectId={projectId}
           statusId={TaskStatusEnum.DONE}
