@@ -9,6 +9,7 @@ export interface IProject {
   updatedAt: Date;
   projectContribution: ProjectContribution[];
   tasks: Task[];
+  role: Role;
 }
 
 export interface ProjectContribution {
@@ -33,4 +34,19 @@ export interface Status {
   name: string;
   createdAt: Date;
   updatedAt: Date;
+}
+
+interface Role {
+  id: string;
+  description: string;
+  rolePermission: RolePermission[];
+}
+
+export interface RolePermission {
+  permission: Permission;
+}
+
+interface Permission {
+  id: string;
+  description: string;
 }

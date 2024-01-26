@@ -9,6 +9,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { ModalNewContribution } from "./modalNewContribution";
 import { TaskBoard } from "./taskBoard";
+import { verifyPermission } from "@/shared/utils/permissions";
+import { PermissionsEnum } from "@/shared/enum/permissionsEnum";
 
 export default function Page({ params }: { params: { id: string } }) {
   const { id: projectId } = params;
@@ -17,11 +19,14 @@ export default function Page({ params }: { params: { id: string } }) {
 
   const { data, isLoading, isError, error } = useFindProject(projectId);
 
-  if (isLoading) return <div>isLoading</div>;
-
-  console.log(error);
+  if (isLoading || !data) return <div>isLoading</div>;
 
   if (isError) return <div>Você não tem acesso a esse projeto</div>;
+
+  const hadPermissionInviteProject = verifyPermission(
+    data.role.rolePermission,
+    PermissionsEnum.INVITE_PROJECT
+  );
 
   let tasksGroupedByStatus: { [status: string]: Task[] } = {
     "In Progress": [],
@@ -72,20 +77,24 @@ export default function Page({ params }: { params: { id: string } }) {
                     />
                   ))}
                 </div>
-                <Button onClick={handleOpenModalNewContribution} size="small">
-                  +
-                </Button>
+                {hadPermissionInviteProject && (
+                  <Button onClick={handleOpenModalNewContribution} size="small">
+                    +
+                  </Button>
+                )}
               </div>
             )}
-            {data && data.projectContribution.length === 0 && (
-              <Button
-                onClick={handleOpenModalNewContribution}
-                size="small"
-                fullWidth
-              >
-                Convide pessoas para contribuir
-              </Button>
-            )}
+            {hadPermissionInviteProject &&
+              data &&
+              data.projectContribution.length === 0 && (
+                <Button
+                  onClick={handleOpenModalNewContribution}
+                  size="small"
+                  fullWidth
+                >
+                  Convide pessoas para contribuir
+                </Button>
+              )}
           </div>
 
           <Link href="/">

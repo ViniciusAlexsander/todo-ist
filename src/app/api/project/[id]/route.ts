@@ -12,7 +12,7 @@ export async function GET(_req: Request, context: { params: IParams }) {
   const { id } = context.params;
 
   if (!session || !session.user.id || !id) {
-    return NextResponse.json({ status: 401 });
+    return NextResponse.json({ error: "session not found" }, { status: 401 });
   }
 
   if (!id) {
@@ -22,6 +22,17 @@ export async function GET(_req: Request, context: { params: IParams }) {
   }
 
   const projectContribution = await prisma.project_Contribution.findFirst({
+    select: {
+      role: {
+        include: {
+          rolePermission: {
+            select: {
+              permission: true,
+            },
+          },
+        },
+      },
+    },
     where: {
       userId: session.user.id,
       AND: {
@@ -59,7 +70,7 @@ export async function GET(_req: Request, context: { params: IParams }) {
     return NextResponse.json({ error: "project not found" }, { status: 500 });
   }
 
-  return NextResponse.json(project);
+  return NextResponse.json({ ...project, role: projectContribution.role });
 }
 
 export async function DELETE(_req: Request, context: { params: IParams }) {
