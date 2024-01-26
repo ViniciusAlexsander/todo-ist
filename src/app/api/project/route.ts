@@ -13,14 +13,17 @@ export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   const { description, name }: Partial<IProject> = await req.json();
 
-  if (!session || !session.user) {
-    return NextResponse.json({ status: 401 });
+  if (!session) {
+    return NextResponse.json({ message: "session not found" }, { status: 401 });
   }
 
   if (!description || !name) {
-    return NextResponse.json({
-      message: "description, userId and name are required",
-    });
+    return NextResponse.json(
+      {
+        message: "description, userId and name are required",
+      },
+      { status: 400 }
+    );
   }
 
   const [newProject, ownerRole] = await prisma.$transaction([
@@ -43,7 +46,10 @@ export async function POST(req: NextRequest) {
   ]);
 
   if (!ownerRole) {
-    return NextResponse.json({ error: "ownerRole not found" }, { status: 500 });
+    return NextResponse.json(
+      { message: "ownerRole not found" },
+      { status: 400 }
+    );
   }
 
   const projectContribution = await prisma.project_Contribution.create({
@@ -54,14 +60,17 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  return NextResponse.json({ id: projectContribution.id });
+  return NextResponse.json(
+    { message: "Successfully created" },
+    { status: 201 }
+  );
 }
 
 export async function GET(_req: NextRequest) {
   const session = await getServerSession(authOptions);
 
   if (!session || !session.user) {
-    return NextResponse.json({ status: 401 });
+    return NextResponse.json({ message: "session not found" }, { status: 401 });
   }
 
   const projectContribution = await prisma.project_Contribution.findMany({

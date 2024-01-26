@@ -3,10 +3,6 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "../../../auth/[...nextauth]/options";
 
-// const get = (req, context) => createApiMethod(req, context, (session) => {
-
-// })
-
 export interface IPostRequest {
   name: string;
   description?: string;
@@ -23,13 +19,16 @@ export async function POST(req: Request, context: { params: IParams }) {
   const { id: projectId } = context.params;
 
   if (!session) {
-    return NextResponse.json({ status: 401 });
+    return NextResponse.json({ message: "session not found" }, { status: 401 });
   }
 
   if (!name || !projectId || !statusId) {
-    return NextResponse.json({
-      message: "name, projectId and statusId are required",
-    });
+    return NextResponse.json(
+      {
+        message: "name, projectId and statusId are required",
+      },
+      { status: 400 }
+    );
   }
 
   const project = await prisma.project.findFirst({
@@ -40,30 +39,39 @@ export async function POST(req: Request, context: { params: IParams }) {
   });
 
   if (!project) {
-    return NextResponse.json({
-      message: "project with this id not found",
-    });
+    return NextResponse.json(
+      {
+        message: "project with this id not found",
+      },
+      { status: 400 }
+    );
   }
 
-  const newTask = await prisma.task.create({
+  await prisma.task.create({
     data: { name, projectId, statusId, description: description },
   });
 
-  return NextResponse.json(newTask);
+  return NextResponse.json(
+    { message: "Successfully created task" },
+    { status: 201 }
+  );
 }
 
 export async function GET(_req: Request, context: { params: IParams }) {
   const session = await getServerSession(authOptions);
   const { id: projectId } = context.params;
 
-  // if (!session || projectId) {
-  //   return NextResponse.json({ status: 401 });
-  // }
+  if (!session || projectId) {
+    return NextResponse.json({ message: "session not found" }, { status: 401 });
+  }
 
   if (!projectId) {
-    return NextResponse.json({
-      message: "projectId is required",
-    });
+    return NextResponse.json(
+      {
+        message: "projectId is required",
+      },
+      { status: 400 }
+    );
   }
 
   const tasks = await prisma.task.findMany({

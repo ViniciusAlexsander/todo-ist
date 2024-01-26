@@ -15,13 +15,13 @@ export async function POST(req: NextRequest) {
     await req.json();
 
   if (!session || !session.user) {
-    return NextResponse.json({ error: "session not found" }, { status: 401 });
+    return NextResponse.json({ message: "session not found" }, { status: 401 });
   }
 
   if (!projectId || !userId || !roleId) {
     return NextResponse.json(
-      { error: "projectId, roleId and userId are required" },
-      { status: 500 }
+      { message: "projectId, roleId and userId are required" },
+      { status: 400 }
     );
   }
 
@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
   });
 
   if (!userExists) {
-    return NextResponse.json({ error: "user not found" }, { status: 500 });
+    return NextResponse.json({ message: "user not found" }, { status: 404 });
   }
 
   const projectExists = await prisma.project.findFirst({
@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
   });
 
   if (!projectExists) {
-    return NextResponse.json({ error: "project not found" }, { status: 500 });
+    return NextResponse.json({ message: "project not found" }, { status: 404 });
   }
 
   const projectContributionExists = await prisma.project_Contribution.findFirst(
@@ -57,12 +57,12 @@ export async function POST(req: NextRequest) {
 
   if (projectContributionExists) {
     return NextResponse.json(
-      { error: "This user is already contribution in this project" },
-      { status: 500 }
+      { message: "This user is already contribution in this project" },
+      { status: 400 }
     );
   }
 
-  const newProjectContribution = await prisma.project_Contribution.create({
+  await prisma.project_Contribution.create({
     data: {
       projectId,
       userId,
@@ -70,5 +70,8 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  return NextResponse.json({ id: newProjectContribution.id });
+  return NextResponse.json(
+    { message: "new contribution created" },
+    { status: 201 }
+  );
 }

@@ -12,13 +12,16 @@ export async function GET(_req: Request, context: { params: IParams }) {
   const { id } = context.params;
 
   if (!session || !session.user.id || !id) {
-    return NextResponse.json({ error: "session not found" }, { status: 401 });
+    return NextResponse.json({ message: "session not found" }, { status: 401 });
   }
 
   if (!id) {
-    return NextResponse.json({
-      message: "id are required",
-    });
+    return NextResponse.json(
+      {
+        message: "id are required",
+      },
+      { status: 400 }
+    );
   }
 
   const projectContribution = await prisma.project_Contribution.findFirst({
@@ -43,8 +46,8 @@ export async function GET(_req: Request, context: { params: IParams }) {
 
   if (!projectContribution) {
     return NextResponse.json(
-      { error: "you don't have access to this project" },
-      { status: 500 }
+      { message: "you don't have access to this project" },
+      { status: 403 }
     );
   }
 
@@ -67,7 +70,7 @@ export async function GET(_req: Request, context: { params: IParams }) {
   });
 
   if (!project) {
-    return NextResponse.json({ error: "project not found" }, { status: 500 });
+    return NextResponse.json({ message: "project not found" }, { status: 404 });
   }
 
   return NextResponse.json({ ...project, role: projectContribution.role });
@@ -78,38 +81,47 @@ export async function DELETE(_req: Request, context: { params: IParams }) {
   const { id } = context.params;
 
   if (!session || !session.user.id || !id) {
-    return NextResponse.json({ status: 401 });
+    return NextResponse.json({ message: "session not found" }, { status: 401 });
   }
 
   if (!id) {
-    return NextResponse.json({
-      message: "id are required",
-    });
+    return NextResponse.json(
+      {
+        message: "id are required",
+      },
+      { status: 400 }
+    );
   }
 
   let project = await prisma.project.findFirst({
     where: {
       id,
-      userId: session.user.id,
+      // userId: session.user.id,
     },
   });
 
   if (!project) {
-    return NextResponse.json({
-      message: "project not found",
-    });
+    return NextResponse.json(
+      {
+        message: "project not found",
+      },
+      { status: 404 }
+    );
   }
 
   await prisma.project.delete({
     where: {
       id,
-      userId: session.user.id,
+      // userId: session.user.id,
     },
   });
 
-  return NextResponse.json({
-    message: "Successfully deleted project",
-  });
+  return NextResponse.json(
+    {
+      message: "Successfully deleted project",
+    },
+    { status: 204 }
+  );
 }
 
 interface IParams {
