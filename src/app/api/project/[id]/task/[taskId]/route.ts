@@ -83,7 +83,7 @@ export async function DELETE(_req: Request, context: { params: IParams }) {
     {
       message: "Successfully deleted",
     },
-    { status: 204 }
+    { status: 200 }
   );
 }
 
@@ -140,7 +140,7 @@ export async function PUT(req: Request, context: { params: IParams }) {
 
   return NextResponse.json(
     { message: "Successfully updated task" },
-    { status: 204 }
+    { status: 200 }
   );
 }
 
