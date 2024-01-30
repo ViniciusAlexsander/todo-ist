@@ -45,7 +45,7 @@ export async function GET(req: NextRequest, context: { params: IParams }) {
       user: true,
     },
     where: {
-      id: projectContributionExits.id,
+      projectId: id,
     },
   });
 

@@ -2,4 +2,5 @@ export enum QueryCaches {
   PROJECTS = "PROJECTS",
   USER = "USER",
   ROLES = "ROLES",
+  PROJECTS_CONTRIBUTORS = "PROJECTS_CONTRIBUTORS",
 }

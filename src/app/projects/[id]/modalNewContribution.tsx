@@ -107,6 +107,26 @@ export const ModalNewContribution = ({
                         type="text"
                       />
                     </label>
+                    <label className="block mt-9">
+                      <span className="block text-sm font-semibold text-copy-primary">
+                        Selecione o papel do colaborador
+                      </span>
+
+                      <select
+                        className="w-full"
+                        value={roleId}
+                        onChange={(e) => setRoleId(e.target.value)}
+                      >
+                        <option value="">Selecione o papel</option>
+
+                        {roles &&
+                          roles.map((role) => (
+                            <option key={role.id} value={role.id}>
+                              {role.description}
+                            </option>
+                          ))}
+                      </select>
+                    </label>
                   </form>
                   {collaborators && collaborators.length > 0 && (
                     <div className="mt-6">
@@ -141,26 +161,7 @@ export const ModalNewContribution = ({
                       </div>
                     </div>
                   )}
-                  <div className="mt-6">
-                    <p className="font-bold text-copy-primary text-sm">
-                      Selecione o papel do colaborador
-                    </p>
 
-                    <select
-                      className="w-full"
-                      value={roleId} // ...force the select's value to match the state variable...
-                      onChange={(e) => setRoleId(e.target.value)} // ... and update the state variable on any change!
-                    >
-                      <option value="">Selecione o papel</option>
-
-                      {roles &&
-                        roles.map((role) => (
-                          <option key={role.id} value={role.id}>
-                            {role.description}
-                          </option>
-                        ))}
-                    </select>
-                  </div>
                   <div className="w-full flex justify-between gap-x-3 mt-6">
                     <button
                       type="button"
