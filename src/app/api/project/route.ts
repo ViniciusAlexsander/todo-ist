@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const projectContribution = await prisma.project_Contribution.create({
+  await prisma.project_Contribution.create({
     data: {
       projectId: newProject.id,
       userId: session.user.id,
