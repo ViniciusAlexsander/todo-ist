@@ -178,7 +178,7 @@ export const ModalNewContribution = ({
                       loading={loading}
                       disabled={!userIdSelected || !roleId}
                     >
-                      Criar projeto
+                      Enviar convite
                     </Button>
                   </div>
                 </div>

@@ -2,8 +2,8 @@
 
 import { useFindProjectContributors } from "@/shared/services/projectContributors";
 import { Dialog, Transition } from "@headlessui/react";
-import Image from "next/image";
-import { Fragment, useRef } from "react";
+import { Fragment, useRef, useState } from "react";
+import { CardColaborator } from "./cardColaborator";
 
 interface IModalContributionProps {
   modalOpen: boolean;
@@ -16,11 +16,10 @@ export const ModalContribution = ({
   handleCloseModal,
   projectId,
 }: IModalContributionProps) => {
+  const [roleId, setRoleId] = useState<string | undefined>(undefined);
   const cancelButtonRef = useRef(null);
 
   const { data: contributions } = useFindProjectContributors(projectId);
-
-  console.log({ contributions });
 
   return (
     <Transition.Root show={modalOpen} as={Fragment}>
@@ -63,25 +62,10 @@ export const ModalContribution = ({
                   {contributions &&
                     contributions.length > 0 &&
                     contributions.map((contribution) => (
-                      <div
+                      <CardColaborator
                         key={contribution.id}
-                        className="flex gap-x-3 items-center p-2 mb-2"
-                      >
-                        <div>
-                          <Image
-                            src={contribution.user.image}
-                            alt={`Avatar de ${contribution.user.name}`}
-                            width="30"
-                            height="30"
-                            className="rounded-3xl"
-                          />
-                        </div>
-                        <div>
-                          <p>{contribution.user.name}</p>
-                          <p>{contribution.user.email}</p>
-                        </div>
-                        <div></div>
-                      </div>
+                        contribution={contribution}
+                      />
                     ))}
                 </div>
               </Dialog.Panel>
