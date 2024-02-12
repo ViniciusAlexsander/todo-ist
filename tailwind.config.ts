@@ -14,6 +14,7 @@ const config: Config = {
       primary: "rgb(23, 23, 23)",
       secondary: "rgb(13, 110, 222)",
 
+      "copy-primary": "rgb(70, 70, 70)",
       "copy-secondary": "rgb(2, 160, 252)",
       border: "rgba(203, 210, 224, 1)",
       surfaces: "rgba(255, 255, 255, 1)",

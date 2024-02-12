@@ -28,7 +28,7 @@ export const Button = ({
   return (
     <button
       {...rest}
-      className={`flex items-center justify-center bg-primary text-surfaces disabled:bg-disabled font-bold rounded-md hover:bg-copy-primary  ${
+      className={`flex items-center justify-center  bg-secondary hover:bg-copy-secondary text-surfaces disabled:bg-disabled font-bold rounded-md  ${
         fullWidth ? "w-full" : ""
       } ${buttonSize[size]}`}
     >

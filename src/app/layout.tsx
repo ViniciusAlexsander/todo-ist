@@ -1,10 +1,10 @@
+import { Header } from "@/components/Header";
 import type { Metadata } from "next";
+import { getServerSession } from "next-auth";
 import { Inter } from "next/font/google";
+import { authOptions } from "./api/auth/[...nextauth]/options";
 import "./globals.css";
 import { Providers } from "./providers";
-import { getServerSession } from "next-auth";
-import { Header } from "@/components/Header";
-import { authOptions } from "./api/auth/[...nextauth]/options";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,11 +18,13 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getServerSession(authOptions);
   return (
     <html lang="en">
       <body>
         <Providers>
-          <Header />
+          {session && <Header />}
+
           {children}
         </Providers>
       </body>
