@@ -74,9 +74,9 @@ export async function GET(_req: NextRequest) {
   }
 
   const projectContribution = await prisma.project_Contribution.findMany({
-    include: {
+    select: {
       project: {
-        include: {
+        select: {
           user: true,
         },
       },
