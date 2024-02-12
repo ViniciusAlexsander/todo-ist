@@ -7,12 +7,14 @@ const config: Config = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    fontFamily: {
+      sans: ["Satoshi", "sans-serif"],
+    },
     colors: {
-      primary: "rgb(52,72,76)",
-      secondary: "rgb(192, 189, 180)",
+      primary: "rgb(23, 23, 23)",
+      secondary: "rgb(13, 110, 222)",
 
-      "copy-primary": "rgb(94,115,120)",
-      "copy-secondary": "rgb(192, 189, 180)",
+      "copy-secondary": "rgb(2, 160, 252)",
       border: "rgba(203, 210, 224, 1)",
       surfaces: "rgba(255, 255, 255, 1)",
       disabled: "rgba(203, 210, 224, 1)",
