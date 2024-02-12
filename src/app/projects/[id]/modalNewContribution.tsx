@@ -9,7 +9,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import Image from "next/image";
-import { Fragment, useRef, useState } from "react";
+import { Fragment, SetStateAction, useRef, useState } from "react";
 
 interface INewProjectModalProps {
   modalOpen: boolean;
@@ -33,11 +33,13 @@ export const ModalNewContribution = ({
   const { data: roles } = useRoles();
   const { data: collaborators } = useFindUser(emailSearch);
 
-  const handleSelectContributionChange = (e) => {
+  const handleSelectContributionChange = (e: {
+    target: { value: SetStateAction<string | null> };
+  }) => {
     setUserIdSelect(e.target.value);
   };
 
-  const handleSearchContribution = async () => {
+  const handleCreateProject = async () => {
     try {
       setLoading(true);
       await axiosInstance.post("project/contribution", {
@@ -47,8 +49,8 @@ export const ModalNewContribution = ({
       });
       queryClient.invalidateQueries({ queryKey: [QueryCaches.PROJECTS] });
       handleCloseModal();
-    } catch (error: AxiosError) {
-      window.alert(error.response.data.error);
+    } catch (error) {
+      window.alert("Erro ao criar projeto");
     } finally {
       setLoading(false);
       setUserIdSelect(null);
@@ -172,7 +174,7 @@ export const ModalNewContribution = ({
                     </button>
                     <Button
                       size="medium"
-                      onClick={handleSearchContribution}
+                      onClick={handleCreateProject}
                       fullWidth
                       loading={loading}
                       disabled={!userIdSelected || !roleId}
