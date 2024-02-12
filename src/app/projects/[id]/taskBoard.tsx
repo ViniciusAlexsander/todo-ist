@@ -138,13 +138,28 @@ export const TaskBoard = ({
             />
           </div>
           <div className="flex justify-between border-t border-border p-2">
-            <button onClick={() => setAdicionando(false)}>Cancelar</button>
-            <button onClick={handleCreateTask}>Adicionar</button>
+            <button
+              className="text-primary hover:text-copy-secondary"
+              onClick={() => setAdicionando(false)}
+            >
+              Cancelar
+            </button>
+            <button
+              className="text-primary hover:text-copy-secondary"
+              onClick={handleCreateTask}
+            >
+              Adicionar
+            </button>
           </div>
         </div>
       ) : (
         <div className="p-2">
-          <button onClick={() => setAdicionando(true)}>+ Adicionar</button>
+          <button
+            className="text-primary hover:text-copy-secondary"
+            onClick={() => setAdicionando(true)}
+          >
+            + Adicionar tarefa
+          </button>
         </div>
       )}
     </div>

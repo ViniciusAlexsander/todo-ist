@@ -30,7 +30,7 @@ export const Header = () => {
         className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
         aria-label="Global"
       >
-        <div className="hidden lg:flex lg:gap-x-12">
+        <div className="flex gap-x-12">
           <a
             href="/"
             className="text-lg font-semibold leading-6 text-primary hover:text-copy-primary"
@@ -44,7 +44,7 @@ export const Header = () => {
             Criar projeto
           </button>
         </div>
-        <div className="text-lg hidden lg:flex lg:flex-1 lg:justify-end">
+        <div className="text-lg flex flex-1 justify-end">
           Signed in as {session?.user?.name}
           <button
             onClick={handleSingOut}
