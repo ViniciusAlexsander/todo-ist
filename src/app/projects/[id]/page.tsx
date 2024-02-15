@@ -60,16 +60,24 @@ export default function Page({ params }: { params: { id: string } }) {
     setOpenModalContribution(true);
   };
 
+  const handleCloseModalNewContribution = () => {
+    setOpenModalNewContribution(false);
+  };
+
+  const handleCloseModalContribution = () => {
+    setOpenModalContribution(false);
+  };
+
   return (
     <div className="pt-0 p-10">
       <ModalNewContribution
         modalOpen={openModalNewContribution}
-        handleCloseModal={() => setOpenModalNewContribution(false)}
+        handleCloseModal={handleCloseModalNewContribution}
         projectId={projectId}
       />
       <ModalContribution
         modalOpen={openModalContribution}
-        handleCloseModal={() => setOpenModalContribution(false)}
+        handleCloseModal={handleCloseModalContribution}
         projectId={projectId}
       />
       <div className="w-full flex justify-between mt-5">

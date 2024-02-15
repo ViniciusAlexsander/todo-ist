@@ -1,11 +1,10 @@
 "use client";
 
-import { TaskStatusEnum, obterStatus } from "@/shared/enum/taskStatusEnum";
-import { axiosInstance } from "@/shared/lib/axios";
-import { QueryCaches } from "@/shared/lib/reactQuery";
+import { TaskStatusEnum } from "@/shared/enum/taskStatusEnum";
 import { Task } from "@/shared/models/project";
-import { useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useCreateTask } from "@/shared/services/tasks";
+import { ChangeEvent, useState } from "react";
+import { TaskCard } from "./taskCard";
 
 interface ITaskBoardProps {
   tasks: Task[];
@@ -20,74 +19,43 @@ export const TaskBoard = ({
   projectId,
   statusId,
 }: ITaskBoardProps) => {
-  const [adicionando, setAdicionando] = useState<boolean>(false);
+  const [isAddNewTask, setIsAddNewTask] = useState<boolean>(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const queryClient = useQueryClient();
-
-  const handleCreateTask = async () => {
-    try {
-      setLoading(true);
-      const response = await axiosInstance.post(`project/${projectId}/task`, {
-        name,
-        description,
-        statusId,
-      });
-
-      setLoading(false);
-      queryClient.invalidateQueries({ queryKey: [QueryCaches.PROJECTS] });
-      setName("");
-      setDescription("");
-      setAdicionando(false);
-    } catch (error) {
-      window.alert("Erro ao criar tarefa, tente novamente mais tarde");
-    }
+  const resetState = () => {
+    setName("");
+    setDescription("");
+    setIsAddNewTask(false);
   };
 
-  const handleDeleteTask = async (taskId: string) => {
-    try {
-      setLoading(true);
-      const response = await axiosInstance.delete(
-        `project/${projectId}/task/${taskId}`
-      );
+  const { mutate: createTask } = useCreateTask({
+    description,
+    statusId,
+    name,
+    projectId,
+    resetState,
+  });
 
-      setLoading(false);
-      queryClient.invalidateQueries({ queryKey: [QueryCaches.PROJECTS] });
-      setName("");
-      setDescription("");
-    } catch (error) {
-      window.alert("Erro ao excluir tarefa, tente novamente mais tarde");
-    }
+  const handleCreateTask = () => {
+    createTask();
   };
 
-  const handleUpdateTask = async ({
-    taskId,
-    newStatus,
-  }: {
-    taskId: string;
-    newStatus: string;
-  }) => {
-    try {
-      setLoading(true);
-      const response = await axiosInstance.put(
-        `project/${projectId}/task/${taskId}`,
-        {
-          statusId: newStatus,
-        }
-      );
-
-      setLoading(false);
-      queryClient.invalidateQueries({ queryKey: [QueryCaches.PROJECTS] });
-      setName("");
-      setDescription("");
-    } catch (error) {
-      window.alert("Erro ao excluir tarefa, tente novamente mais tarde");
-    }
+  const handleCancel = () => {
+    setIsAddNewTask(false);
   };
 
-  const dadosAtualizacao = obterStatus[statusId];
+  const handleTaskNameInput = (e: ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+  };
+
+  const handleTaskDescriptionInput = (e: ChangeEvent<HTMLInputElement>) => {
+    setDescription(e.target.value);
+  };
+
+  const handleAddNewTask = () => {
+    setIsAddNewTask(true);
+  };
 
   return (
     <div>
@@ -96,51 +64,31 @@ export const TaskBoard = ({
         <p className="ml-3 text-sm">{tasks.length}</p>
       </div>
       {tasks.map((task) => (
-        <div
+        <TaskCard
           key={task.id}
-          className="border rounded border-border bg-surfaces p-2 mb-3 shadow "
-        >
-          <div className="flex justify-end">
-            <button onClick={() => handleDeleteTask(task.id)}>x</button>
-          </div>
-          <div>
-            <p>{task.name}</p>
-            <p>{task.description}</p>
-          </div>
-          {statusId !== TaskStatusEnum.DONE && (
-            <div>
-              <button
-                onClick={() => {
-                  handleUpdateTask({
-                    newStatus: dadosAtualizacao.proxStatus,
-                    taskId: task.id,
-                  });
-                }}
-              >
-                {dadosAtualizacao.nomeBotao}
-              </button>
-            </div>
-          )}
-        </div>
+          task={task}
+          projectId={projectId}
+          statusId={statusId}
+        />
       ))}
-      {adicionando ? (
+      {isAddNewTask ? (
         <div className="border rounded border-border bg-surfaces  mb-3 shadow ">
           <div className="flex flex-col gap-1 p-2">
             <input
               type="text"
               placeholder="Nome da tarefa"
-              onChange={(e) => setName(e.target.value)}
+              onChange={handleTaskNameInput}
             />
             <input
               type="text"
               placeholder="Descrição"
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={handleTaskDescriptionInput}
             />
           </div>
           <div className="flex justify-between border-t border-border p-2">
             <button
               className="text-primary hover:text-copy-secondary"
-              onClick={() => setAdicionando(false)}
+              onClick={handleCancel}
             >
               Cancelar
             </button>
@@ -156,7 +104,7 @@ export const TaskBoard = ({
         <div className="p-2">
           <button
             className="text-primary hover:text-copy-secondary"
-            onClick={() => setAdicionando(true)}
+            onClick={handleAddNewTask}
           >
             + Adicionar tarefa
           </button>

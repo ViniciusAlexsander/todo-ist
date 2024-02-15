@@ -31,7 +31,7 @@ export default function Page() {
         data?.map((project) => (
           <div
             key={project.id}
-            className="border-solid border-2 border-primary rounded-lg p-4"
+            className="border-solid border border-primary rounded-lg p-4"
           >
             <div className="w-full flex justify-end">
               <a

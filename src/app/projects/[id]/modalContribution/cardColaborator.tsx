@@ -19,10 +19,10 @@ export const CardColaborator = ({ contribution }: ICardColaboratorProps) => {
   const queryClient = useQueryClient();
   const { data: roles } = useRoles();
 
-  const handleUpdateRoleContribution = async (contributionId: string) => {
+  const handleUpdateRoleContribution = async () => {
     try {
       setLoading(true);
-      await axiosInstance.put(`project/contribution/${contributionId}`, {
+      await axiosInstance.put(`project/contribution/${contribution.id}`, {
         roleId,
       });
       queryClient.invalidateQueries({
@@ -67,7 +67,7 @@ export const CardColaborator = ({ contribution }: ICardColaboratorProps) => {
         </label>
       </div>
       <Button
-        onClick={() => handleUpdateRoleContribution(contribution.id)}
+        onClick={handleUpdateRoleContribution}
         size="small"
         disabled={roleId === contribution.roleId || loading}
       >
