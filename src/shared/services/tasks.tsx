@@ -4,30 +4,33 @@ import { axiosInstance } from "../lib/axios";
 import { QueryCaches } from "../lib/reactQuery";
 
 interface ICreateTask {
+  resetState: () => void;
+  projectId: string;
+}
+
+interface ITaskCreate {
   name: string;
   description: string;
   statusId: TaskStatusEnum;
   projectId: string;
-  resetState: () => void;
 }
 
-export const useCreateTask = ({
-  description,
-  name,
-  projectId,
-  statusId,
-  resetState,
-}: ICreateTask) => {
+export const useCreateTask = ({ resetState, projectId }: ICreateTask) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: () =>
-      axiosInstance.post(`project/${projectId}/task`, {
-        name,
-        description,
-        statusId,
+    mutationFn: (task: ITaskCreate) =>
+      axiosInstance.post(`project/${task.projectId}/task`, {
+        name: task.name,
+        description: task.description,
+        statusId: task.statusId,
       }),
-    onSettled: async () => {
-      return await queryClient.invalidateQueries({
+    // onMutate: (variables) => {
+    //   queryClient.setQueryData([QueryCaches.PROJECTS, projectId], (old) => {
+    //     console.log(old);
+    //   });
+    // },
+    onSettled: () => {
+      queryClient.invalidateQueries({
         queryKey: [QueryCaches.PROJECTS, projectId],
       });
     },
