@@ -1,6 +1,7 @@
 import { Button } from "@/components/Button";
 import { axiosInstance } from "@/shared/lib/axios";
 import { QueryCaches } from "@/shared/lib/reactQuery";
+import { ApiError } from "@/shared/models/ApiError";
 import { IProjectContribution } from "@/shared/models/projectContributors";
 import { useRoles } from "@/shared/services/roles";
 import { useQueryClient } from "@tanstack/react-query";
@@ -28,8 +29,8 @@ export const CardColaborator = ({ contribution }: ICardColaboratorProps) => {
       queryClient.invalidateQueries({
         queryKey: [QueryCaches.PROJECTS_CONTRIBUTORS],
       });
-    } catch (error: AxiosError) {
-      window.alert(error.response.data.error);
+    } catch (error: ApiError) {
+      window.alert(error.response.data.message);
     } finally {
       setLoading(false);
     }
@@ -66,6 +67,13 @@ export const CardColaborator = ({ contribution }: ICardColaboratorProps) => {
           </select>
         </label>
       </div>
+      <Button
+        onClick={handleUpdateRoleContribution}
+        size="small"
+        disabled={roleId === contribution.roleId || loading}
+      >
+        <div>Salvar</div>
+      </Button>
       <Button
         onClick={handleUpdateRoleContribution}
         size="small"

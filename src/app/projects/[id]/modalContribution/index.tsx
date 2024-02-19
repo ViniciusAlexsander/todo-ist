@@ -55,7 +55,7 @@ export const ModalContribution = ({
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-surfaces text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                 <div className="border-border border-b-2 p-6">
                   <h3 className="font-bold text-copy-primary text-xl">
-                    Opções de compartilhamento
+                    Colaboradores
                   </h3>
                 </div>
                 <div className="p-6">

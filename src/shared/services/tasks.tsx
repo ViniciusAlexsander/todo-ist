@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { TaskStatusEnum } from "../enum/taskStatusEnum";
 import { axiosInstance } from "../lib/axios";
 import { QueryCaches } from "../lib/reactQuery";
+import { ApiError } from "@/shared/models/ApiError";
 
 interface ICreateTask {
   resetState: () => void;
@@ -37,8 +38,8 @@ export const useCreateTask = ({ resetState, projectId }: ICreateTask) => {
     onSuccess: (data) => {
       resetState();
     },
-    onError: (error: Error) => {
-      window.alert("Erro ao criar tarefa, tente novamente mais tarde" + error);
+    onError: (error: ApiError) => {
+      window.alert(error.response.data.message);
     },
   });
 };
