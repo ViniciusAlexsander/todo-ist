@@ -1,11 +1,11 @@
 import { Button } from "@/components/Button";
-import { axiosInstance } from "@/shared/lib/axios";
-import { QueryCaches } from "@/shared/lib/reactQuery";
-import { ApiError } from "@/shared/models/ApiError";
+import { TrashIcon } from "@/components/Icons";
 import { IProjectContribution } from "@/shared/models/projectContributors";
+import {
+  useDeleteContribution,
+  useUpdateRoleContribution,
+} from "@/shared/services/projectContributors";
 import { useRoles } from "@/shared/services/roles";
-import { useQueryClient } from "@tanstack/react-query";
-import { AxiosError } from "axios";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -15,25 +15,28 @@ interface ICardColaboratorProps {
 
 export const CardColaborator = ({ contribution }: ICardColaboratorProps) => {
   const [roleId, setRoleId] = useState<string>(contribution.role.id);
-  const [loading, setLoading] = useState(false);
 
-  const queryClient = useQueryClient();
   const { data: roles } = useRoles();
 
+  const { mutate: updateRoleContribution } = useUpdateRoleContribution({
+    projectId: contribution.projectId,
+  });
+
   const handleUpdateRoleContribution = async () => {
-    try {
-      setLoading(true);
-      await axiosInstance.put(`project/contribution/${contribution.id}`, {
-        roleId,
-      });
-      queryClient.invalidateQueries({
-        queryKey: [QueryCaches.PROJECTS_CONTRIBUTORS],
-      });
-    } catch (error: ApiError) {
-      window.alert(error.response.data.message);
-    } finally {
-      setLoading(false);
-    }
+    updateRoleContribution({
+      contributionId: contribution.id,
+      roleId,
+    });
+  };
+
+  const { mutate: deleteContribution } = useDeleteContribution({
+    projectId: contribution.projectId,
+  });
+
+  const handleDeleteContribution = async () => {
+    deleteContribution({
+      contributionId: contribution.id,
+    });
   };
 
   return (
@@ -70,16 +73,12 @@ export const CardColaborator = ({ contribution }: ICardColaboratorProps) => {
       <Button
         onClick={handleUpdateRoleContribution}
         size="small"
-        disabled={roleId === contribution.roleId || loading}
+        disabled={roleId === contribution.roleId}
       >
-        <div>Salvar</div>
+        Salvar
       </Button>
-      <Button
-        onClick={handleUpdateRoleContribution}
-        size="small"
-        disabled={roleId === contribution.roleId || loading}
-      >
-        <div>Salvar</div>
+      <Button onClick={handleDeleteContribution} size="small">
+        <TrashIcon />
       </Button>
     </div>
   );

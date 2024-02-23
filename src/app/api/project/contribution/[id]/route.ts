@@ -1,7 +1,7 @@
+import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 import prisma from "@/shared/lib/prisma";
 import { getServerSession } from "next-auth";
-import { NextRequest, NextResponse } from "next/server";
-import { authOptions } from "@/app/api/auth/[...nextauth]/options";
+import { NextResponse } from "next/server";
 
 export interface IPutRequest {
   roleId: string;
@@ -70,6 +70,50 @@ export async function PUT(req: Request, context: { params: IParams }) {
 
   return NextResponse.json(
     { message: "Successfully updated contribution" },
+    { status: 200 }
+  );
+}
+
+export async function DELETE(req: Request, context: { params: IParams }) {
+  const session = await getServerSession(authOptions);
+  const { id } = context.params;
+
+  if (!session) {
+    return NextResponse.json({ message: "session not found" }, { status: 401 });
+  }
+
+  if (!id) {
+    return NextResponse.json(
+      {
+        message: "id is required",
+      },
+      { status: 400 }
+    );
+  }
+
+  let projectContribution = await prisma.project_Contribution.findFirst({
+    where: {
+      id: id,
+    },
+  });
+
+  if (!projectContribution) {
+    return NextResponse.json(
+      {
+        message: "project contribution not found",
+      },
+      { status: 404 }
+    );
+  }
+
+  await prisma.project_Contribution.delete({
+    where: {
+      id: projectContribution.id,
+    },
+  });
+
+  return NextResponse.json(
+    { message: "Successfully delete contribution" },
     { status: 200 }
   );
 }
