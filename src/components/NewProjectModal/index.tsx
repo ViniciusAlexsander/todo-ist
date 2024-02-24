@@ -1,5 +1,3 @@
-"use client";
-
 import { axiosInstance } from "@/shared/lib/axios";
 import { QueryCaches } from "@/shared/lib/reactQuery";
 import { Dialog, Transition } from "@headlessui/react";
