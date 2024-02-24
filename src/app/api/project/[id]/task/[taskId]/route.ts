@@ -1,4 +1,4 @@
-import prisma from "@/shared/lib/prisma";
+// import prisma from "@/shared/lib/prisma";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "@/app/api/auth/[...nextauth]/options";
@@ -20,25 +20,25 @@ export async function GET(_req: Request, context: { params: IParams }) {
     );
   }
 
-  const task = await prisma.task.findFirst({
-    include: {
-      status: true,
-    },
-    where: {
-      id: taskId,
-    },
-  });
+  // const task = await prisma.task.findFirst({
+  //   include: {
+  //     status: true,
+  //   },
+  //   where: {
+  //     id: taskId,
+  //   },
+  // });
 
-  if (!task) {
-    return NextResponse.json(
-      {
-        message: "task not found",
-      },
-      { status: 404 }
-    );
-  }
+  // if (!task) {
+  //   return NextResponse.json(
+  //     {
+  //       message: "task not found",
+  //     },
+  //     { status: 404 }
+  //   );
+  // }
 
-  return NextResponse.json(task);
+  // return NextResponse.json(task);
 }
 
 export async function DELETE(_req: Request, context: { params: IParams }) {
@@ -58,26 +58,26 @@ export async function DELETE(_req: Request, context: { params: IParams }) {
     );
   }
 
-  let task = await prisma.task.findFirst({
-    where: {
-      id: taskId,
-    },
-  });
+  // let task = await prisma.task.findFirst({
+  //   where: {
+  //     id: taskId,
+  //   },
+  // });
 
-  if (!task) {
-    return NextResponse.json(
-      {
-        message: "task not found",
-      },
-      { status: 404 }
-    );
-  }
+  // if (!task) {
+  //   return NextResponse.json(
+  //     {
+  //       message: "task not found",
+  //     },
+  //     { status: 404 }
+  //   );
+  // }
 
-  await prisma.task.delete({
-    where: {
-      id: taskId,
-    },
-  });
+  // await prisma.task.delete({
+  //   where: {
+  //     id: taskId,
+  //   },
+  // });
 
   return NextResponse.json(
     {
@@ -112,31 +112,31 @@ export async function PUT(req: Request, context: { params: IParams }) {
     );
   }
 
-  let task = await prisma.task.findFirst({
-    where: {
-      id: taskId,
-    },
-  });
+  // let task = await prisma.task.findFirst({
+  //   where: {
+  //     id: taskId,
+  //   },
+  // });
 
-  if (!task) {
-    return NextResponse.json(
-      {
-        message: "task not found",
-      },
-      { status: 404 }
-    );
-  }
+  // if (!task) {
+  //   return NextResponse.json(
+  //     {
+  //       message: "task not found",
+  //     },
+  //     { status: 404 }
+  //   );
+  // }
 
-  await prisma.task.update({
-    data: {
-      description: description || task.description,
-      name: name || task.name,
-      statusId: statusId || task.statusId,
-    },
-    where: {
-      id: taskId,
-    },
-  });
+  // await prisma.task.update({
+  //   data: {
+  //     description: description || task.description,
+  //     name: name || task.name,
+  //     statusId: statusId || task.statusId,
+  //   },
+  //   where: {
+  //     id: taskId,
+  //   },
+  // });
 
   return NextResponse.json(
     { message: "Successfully updated task" },

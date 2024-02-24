@@ -1,4 +1,4 @@
-import prisma from "@/shared/lib/prisma";
+// import prisma from "@/shared/lib/prisma";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "@/app/api/auth/[...nextauth]/options";
@@ -25,50 +25,50 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const userExists = await prisma.user.findFirst({
-    where: {
-      id: userId,
-    },
-  });
+  // const userExists = await prisma.user.findFirst({
+  //   where: {
+  //     id: userId,
+  //   },
+  // });
 
-  if (!userExists) {
-    return NextResponse.json({ message: "user not found" }, { status: 404 });
-  }
+  // if (!userExists) {
+  //   return NextResponse.json({ message: "user not found" }, { status: 404 });
+  // }
 
-  const projectExists = await prisma.project.findFirst({
-    where: {
-      // userId: session.user.id,
-      id: projectId,
-    },
-  });
+  // const projectExists = await prisma.project.findFirst({
+  //   where: {
+  //     // userId: session.user.id,
+  //     id: projectId,
+  //   },
+  // });
 
-  if (!projectExists) {
-    return NextResponse.json({ message: "project not found" }, { status: 404 });
-  }
+  // if (!projectExists) {
+  //   return NextResponse.json({ message: "project not found" }, { status: 404 });
+  // }
 
-  const projectContributionExists = await prisma.project_Contribution.findFirst(
-    {
-      where: {
-        projectId,
-        userId,
-      },
-    }
-  );
+  // const projectContributionExists = await prisma.project_Contribution.findFirst(
+  //   {
+  //     where: {
+  //       projectId,
+  //       userId,
+  //     },
+  //   }
+  // );
 
-  if (projectContributionExists) {
-    return NextResponse.json(
-      { message: "This user is already contribution in this project" },
-      { status: 400 }
-    );
-  }
+  // if (projectContributionExists) {
+  //   return NextResponse.json(
+  //     { message: "This user is already contribution in this project" },
+  //     { status: 400 }
+  //   );
+  // }
 
-  await prisma.project_Contribution.create({
-    data: {
-      projectId,
-      userId,
-      roleId,
-    },
-  });
+  // await prisma.project_Contribution.create({
+  //   data: {
+  //     projectId,
+  //     userId,
+  //     roleId,
+  //   },
+  // });
 
   return NextResponse.json(
     { message: "new contribution created" },

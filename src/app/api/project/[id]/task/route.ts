@@ -1,4 +1,4 @@
-import prisma from "@/shared/lib/prisma";
+// import prisma from "@/shared/lib/prisma";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "../../../auth/[...nextauth]/options";
@@ -35,25 +35,25 @@ export async function POST(req: Request, context: { params: IParams }) {
     );
   }
 
-  const project = await prisma.project.findFirst({
-    where: {
-      id: projectId,
-      // userId: session.user.id,
-    },
-  });
+  // const project = await prisma.project.findFirst({
+  //   where: {
+  //     id: projectId,
+  //     // userId: session.user.id,
+  //   },
+  // });
 
-  if (!project) {
-    return NextResponse.json(
-      {
-        message: "error trying to create task! project with this id not found",
-      },
-      { status: 400 }
-    );
-  }
+  // if (!project) {
+  //   return NextResponse.json(
+  //     {
+  //       message: "error trying to create task! project with this id not found",
+  //     },
+  //     { status: 400 }
+  //   );
+  // }
 
-  await prisma.task.create({
-    data: { name, projectId, statusId, description: description },
-  });
+  // await prisma.task.create({
+  //   data: { name, projectId, statusId, description: description },
+  // });
 
   return NextResponse.json(
     { message: "Successfully created task" },
@@ -78,16 +78,16 @@ export async function GET(_req: Request, context: { params: IParams }) {
     );
   }
 
-  const tasks = await prisma.task.findMany({
-    where: {
-      projectId,
-      project: {
-        // userId: session.user.id,
-      },
-    },
-  });
+  // const tasks = await prisma.task.findMany({
+  //   where: {
+  //     projectId,
+  //     project: {
+  //       // userId: session.user.id,
+  //     },
+  //   },
+  // });
 
-  return NextResponse.json(tasks);
+  // return NextResponse.json(tasks);
 }
 
 interface IParams {

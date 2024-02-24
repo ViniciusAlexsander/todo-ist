@@ -1,4 +1,4 @@
-import prisma from "@/shared/lib/prisma";
+// import prisma from "@/shared/lib/prisma";
 import { IProjectContributionOutput } from "@/shared/ports/project/getProjectOutput";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
@@ -27,39 +27,39 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const [newProject, ownerRole] = await prisma.$transaction([
-    prisma.project.create({
-      data: {
-        description,
-        name,
-        user: {
-          connect: {
-            id: session.user.id,
-          },
-        },
-      },
-    }),
-    prisma.role.findFirst({
-      where: {
-        description: "Super Admin",
-      },
-    }),
-  ]);
+  // const [newProject, ownerRole] = await prisma.$transaction([
+  //   prisma.project.create({
+  //     data: {
+  //       description,
+  //       name,
+  //       user: {
+  //         connect: {
+  //           id: session.user.id,
+  //         },
+  //       },
+  //     },
+  //   }),
+  //   prisma.role.findFirst({
+  //     where: {
+  //       description: "Super Admin",
+  //     },
+  //   }),
+  // ]);
 
-  if (!ownerRole) {
-    return NextResponse.json(
-      { message: "Super Admin role not found" },
-      { status: 400 }
-    );
-  }
+  // if (!ownerRole) {
+  //   return NextResponse.json(
+  //     { message: "Super Admin role not found" },
+  //     { status: 400 }
+  //   );
+  // }
 
-  await prisma.project_Contribution.create({
-    data: {
-      projectId: newProject.id,
-      userId: session.user.id,
-      roleId: ownerRole?.id,
-    },
-  });
+  // await prisma.project_Contribution.create({
+  //   data: {
+  //     projectId: newProject.id,
+  //     userId: session.user.id,
+  //     roleId: ownerRole?.id,
+  //   },
+  // });
 
   return NextResponse.json(
     { message: "Successfully created" },
@@ -74,23 +74,23 @@ export async function GET(_req: NextRequest) {
     return NextResponse.json({ message: "session not found" }, { status: 401 });
   }
 
-  const projectContribution: IProjectContributionOutput[] =
-    await prisma.project_Contribution.findMany({
-      include: {
-        project: {
-          include: {
-            user: true,
-          },
-        },
-      },
-      where: {
-        userId: session.user.id,
-      },
-    });
+  // const projectContribution: IProjectContributionOutput[] =
+  //   await prisma.project_Contribution.findMany({
+  //     include: {
+  //       project: {
+  //         include: {
+  //           user: true,
+  //         },
+  //       },
+  //     },
+  //     where: {
+  //       userId: session.user.id,
+  //     },
+  //   });
 
-  const project = projectContribution.map(
-    (projectContribution) => projectContribution.project
-  );
+  // const project = projectContribution.map(
+  //   (projectContribution) => projectContribution.project
+  // );
 
-  return NextResponse.json(project);
+  // return NextResponse.json(project);
 }

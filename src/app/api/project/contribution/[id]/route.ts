@@ -1,5 +1,5 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/options";
-import prisma from "@/shared/lib/prisma";
+// import prisma from "@/shared/lib/prisma";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
@@ -29,44 +29,44 @@ export async function PUT(req: Request, context: { params: IParams }) {
     );
   }
 
-  let projectContribution = await prisma.project_Contribution.findFirst({
-    where: {
-      id: id,
-    },
-  });
+  // let projectContribution = await prisma.project_Contribution.findFirst({
+  //   where: {
+  //     id: id,
+  //   },
+  // });
 
-  let roleExists = await prisma.role.findFirst({
-    where: {
-      id: roleId,
-    },
-  });
+  // let roleExists = await prisma.role.findFirst({
+  //   where: {
+  //     id: roleId,
+  //   },
+  // });
 
-  if (!roleExists) {
-    return NextResponse.json(
-      {
-        message: "roleId not represents any role",
-      },
-      { status: 404 }
-    );
-  }
+  // if (!roleExists) {
+  //   return NextResponse.json(
+  //     {
+  //       message: "roleId not represents any role",
+  //     },
+  //     { status: 404 }
+  //   );
+  // }
 
-  if (!projectContribution) {
-    return NextResponse.json(
-      {
-        message: "project contribution not found",
-      },
-      { status: 404 }
-    );
-  }
+  // if (!projectContribution) {
+  //   return NextResponse.json(
+  //     {
+  //       message: "project contribution not found",
+  //     },
+  //     { status: 404 }
+  //   );
+  // }
 
-  await prisma.project_Contribution.update({
-    data: {
-      roleId: roleId || projectContribution.roleId,
-    },
-    where: {
-      id: id,
-    },
-  });
+  // await prisma.project_Contribution.update({
+  //   data: {
+  //     roleId: roleId || projectContribution.roleId,
+  //   },
+  //   where: {
+  //     id: id,
+  //   },
+  // });
 
   return NextResponse.json(
     { message: "Successfully updated contribution" },
@@ -91,26 +91,26 @@ export async function DELETE(req: Request, context: { params: IParams }) {
     );
   }
 
-  let projectContribution = await prisma.project_Contribution.findFirst({
-    where: {
-      id: id,
-    },
-  });
+  // let projectContribution = await prisma.project_Contribution.findFirst({
+  //   where: {
+  //     id: id,
+  //   },
+  // });
 
-  if (!projectContribution) {
-    return NextResponse.json(
-      {
-        message: "project contribution not found",
-      },
-      { status: 404 }
-    );
-  }
+  // if (!projectContribution) {
+  //   return NextResponse.json(
+  //     {
+  //       message: "project contribution not found",
+  //     },
+  //     { status: 404 }
+  //   );
+  // }
 
-  await prisma.project_Contribution.delete({
-    where: {
-      id: projectContribution.id,
-    },
-  });
+  // await prisma.project_Contribution.delete({
+  //   where: {
+  //     id: projectContribution.id,
+  //   },
+  // });
 
   return NextResponse.json(
     { message: "Successfully delete contribution" },

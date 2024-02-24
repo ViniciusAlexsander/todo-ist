@@ -1,4 +1,4 @@
-import prisma from "@/shared/lib/prisma";
+// import prisma from "@/shared/lib/prisma";
 import { IUserOutput } from "@/shared/ports/user/getUserOutput";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
@@ -16,22 +16,22 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "email is required" }, { status: 500 });
   }
 
-  const users: IUserOutput[] = await prisma.user.findMany({
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      image: true,
-    },
-    where: {
-      email: {
-        contains: email,
-        mode: "insensitive",
-      },
-    },
-  });
+  // const users: IUserOutput[] = await prisma.user.findMany({
+  //   select: {
+  //     id: true,
+  //     name: true,
+  //     email: true,
+  //     image: true,
+  //   },
+  //   where: {
+  //     email: {
+  //       contains: email,
+  //       mode: "insensitive",
+  //     },
+  //   },
+  // });
 
-  return NextResponse.json(
-    users.filter((user) => user.id !== session?.user.id)
-  );
+  // return NextResponse.json(
+  //   users.filter((user) => user.id !== session?.user.id)
+  // );
 }

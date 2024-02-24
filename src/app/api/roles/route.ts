@@ -1,4 +1,4 @@
-import prisma from "@/shared/lib/prisma";
+// import prisma from "@/shared/lib/prisma";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "../auth/[...nextauth]/options";
@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
   //   return NextResponse.json({ error: "session not found" }, { status: 401 });
   // }
 
-  const roles = await prisma.role.findMany();
+  // const roles = await prisma.role.findMany();
 
-  return NextResponse.json(roles);
+  // return NextResponse.json(roles);
 }
