@@ -1,6 +1,6 @@
 import prisma from "@/shared/lib/prisma";
 import { IProjectContributionOutput } from "@/shared/ports/project/getProjectOutput";
-import { getServerSession } from "next-auth";
+// import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "../auth/[...nextauth]/options";
 
@@ -11,12 +11,12 @@ export interface IProject {
 }
 
 export async function POST(req: NextRequest) {
-  const session = await getServerSession(authOptions);
+  // const session = await getServerSession(authOptions);
   const { description, name }: Partial<IProject> = await req.json();
 
-  if (!session) {
-    return NextResponse.json({ message: "session not found" }, { status: 401 });
-  }
+  // if (!session) {
+  //   return NextResponse.json({ message: "session not found" }, { status: 401 });
+  // }
 
   if (!description || !name) {
     return NextResponse.json(
@@ -33,9 +33,9 @@ export async function POST(req: NextRequest) {
         description,
         name,
         user: {
-          connect: {
-            id: session.user.id,
-          },
+          // connect: {
+          //   id: session.user.id,
+          // },
         },
       },
     }),
@@ -53,13 +53,13 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  await prisma.project_Contribution.create({
-    data: {
-      projectId: newProject.id,
-      userId: session.user.id,
-      roleId: ownerRole?.id,
-    },
-  });
+  // await prisma.project_Contribution.create({
+  //   data: {
+  //     projectId: newProject.id,
+  //     userId: session.user.id,
+  //     roleId: ownerRole?.id,
+  //   },
+  // });
 
   return NextResponse.json(
     { message: "Successfully created" },
@@ -68,11 +68,11 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(_req: NextRequest) {
-  const session = await getServerSession(authOptions);
+  // const session = await getServerSession(authOptions);
 
-  if (!session || !session.user) {
-    return NextResponse.json({ message: "session not found" }, { status: 401 });
-  }
+  // if (!session || !session.user) {
+  //   return NextResponse.json({ message: "session not found" }, { status: 401 });
+  // }
 
   const projectContribution: IProjectContributionOutput[] =
     await prisma.project_Contribution.findMany({
@@ -84,7 +84,7 @@ export async function GET(_req: NextRequest) {
         },
       },
       where: {
-        userId: session.user.id,
+        // userId: session.user.id,
       },
     });
 
