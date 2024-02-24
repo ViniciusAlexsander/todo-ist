@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm run migrate:deploy && npx prisma generate && nest build",
+    "build": "npx prisma generate && npm run migrate:deploy && nest build",
     "start": "next start --port ${PORT-3000}",
     "migrate:dev": "npx prisma migrate dev",
     "migrate:deploy": "npx prisma migrate deploy",
