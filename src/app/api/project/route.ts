@@ -1,4 +1,5 @@
 import prisma from "@/shared/lib/prisma";
+import { IProjectContributionOutput } from "@/shared/ports/project/getProjectOutput";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "../auth/[...nextauth]/options";
@@ -73,7 +74,7 @@ export async function GET(_req: NextRequest) {
     return NextResponse.json({ message: "session not found" }, { status: 401 });
   }
 
-  const projectContribution: ProjectContribution[] =
+  const projectContribution: IProjectContributionOutput[] =
     await prisma.project_Contribution.findMany({
       include: {
         project: {
@@ -92,30 +93,4 @@ export async function GET(_req: NextRequest) {
   );
 
   return NextResponse.json(project);
-}
-
-export interface ProjectContribution {
-  id: string;
-  userId: string;
-  projectId: string;
-  roleId: string;
-  project: Project;
-}
-
-export interface Project {
-  id: string;
-  createdBy: string;
-  name: string;
-  description: string;
-  createdAt: Date;
-  updatedAt: Date;
-  user: User;
-}
-
-export interface User {
-  id: string;
-  name: string | null;
-  email: string | null;
-  emailVerified: Date | null;
-  image: string | null;
 }
