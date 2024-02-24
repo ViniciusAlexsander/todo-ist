@@ -74,9 +74,9 @@ export async function GET(_req: NextRequest) {
   }
 
   const projectContribution = await prisma.project_Contribution.findMany({
-    select: {
+    include: {
       project: {
-        select: {
+        include: {
           user: true,
         },
       },
@@ -86,9 +86,9 @@ export async function GET(_req: NextRequest) {
     },
   });
 
-  return NextResponse.json(
-    projectContribution.map(
-      (projectContribution) => projectContribution.project
-    )
+  const project = projectContribution.map(
+    (projectContribution) => projectContribution.project
   );
+
+  return NextResponse.json(project);
 }
