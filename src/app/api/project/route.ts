@@ -73,22 +73,49 @@ export async function GET(_req: NextRequest) {
     return NextResponse.json({ message: "session not found" }, { status: 401 });
   }
 
-  const projectContribution = await prisma.project_Contribution.findMany({
-    include: {
-      project: {
-        include: {
-          user: true,
+  const projectContribution: ProjectContribution[] =
+    await prisma.project_Contribution.findMany({
+      include: {
+        project: {
+          include: {
+            user: true,
+          },
         },
       },
-    },
-    where: {
-      userId: session.user.id,
-    },
-  });
+      where: {
+        userId: session.user.id,
+      },
+    });
 
   const project = projectContribution.map(
     (projectContribution) => projectContribution.project
   );
 
   return NextResponse.json(project);
+}
+
+export interface ProjectContribution {
+  id: string;
+  userId: string;
+  projectId: string;
+  roleId: string;
+  project: Project;
+}
+
+export interface Project {
+  id: string;
+  createdBy: string;
+  name: string;
+  description: string;
+  createdAt: Date;
+  updatedAt: Date;
+  user: User;
+}
+
+export interface User {
+  id: string;
+  name: string | null;
+  email: string | null;
+  emailVerified: Date | null;
+  image: string | null;
 }
