@@ -1,7 +1,9 @@
-import prisma from "@/shared/lib/prisma";
 // import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { authOptions } from "@/app/api/auth/[...nextauth]/options";
+
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export interface IProjectContribution {
   userId: string;
