@@ -2,7 +2,6 @@ import prisma from "@/shared/lib/prisma";
 import { IUserOutput } from "@/shared/ports/user/getUserOutput";
 // import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { authOptions } from "../auth/[...nextauth]/options";
 
 export async function GET(req: NextRequest) {
   // const session = await getServerSession(authOptions);
