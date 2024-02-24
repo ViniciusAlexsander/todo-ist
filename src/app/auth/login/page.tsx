@@ -5,18 +5,33 @@ import LoginImg from "@/shared/assets/imgs/login-img.svg";
 import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
 import { redirect } from "next/navigation";
+import { useState } from "react";
 
 export default function Page() {
   const { data: session } = useSession();
+  const [loading, setLoading] = useState<boolean>(false);
+
   if (session) {
     redirect("/");
   }
+
+  const handleSignIn = async () => {
+    setLoading(true);
+    await signIn("github");
+    setLoading(false);
+  };
+
   return (
     <div className="flex items-center justify-center h-screen">
       <div className="max-w-screen-lg w-full flex items-center justify-between gap-10 p-10 sm:py-36">
         <div>
           <h1 className="text-3xl font-bold mb-10">Login</h1>
-          <Button onClick={() => signIn("github")} fullWidth size="large">
+          <Button
+            onClick={handleSignIn}
+            loading={loading}
+            fullWidth
+            size="large"
+          >
             Continuar com Github
           </Button>
           <div className="mt-4 underline">

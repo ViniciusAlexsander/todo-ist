@@ -3,14 +3,14 @@
 @tailwind utilities;
 
 :root {
-  --primary: rgb(52, 72, 76);
+  /* --primary: rgb(52, 72, 76);
   --secondary: rgb(192, 189, 180);
 
   --copy-primary: rgb(94, 115, 120);
   --copy-secondary: rgb(233, 229, 220);
   --border: rgba(203, 210, 224, 1);
   --surfaces: rgba(255, 255, 255, 1);
-  --disabled: rgba(203, 210, 224, 1);
+  --disabled: rgba(203, 210, 224, 1); */
 }
 
 @media (prefers-color-scheme: dark) {
