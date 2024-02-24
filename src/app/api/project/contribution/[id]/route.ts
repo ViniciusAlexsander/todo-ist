@@ -12,13 +12,13 @@ interface IParams {
 }
 
 export async function PUT(req: Request, context: { params: IParams }) {
-  const session = await getServerSession(authOptions);
+  // const session = await getServerSession(authOptions);
   const { id } = context.params;
   const { roleId }: Partial<IPutRequest> = await req.json();
 
-  if (!session) {
-    return NextResponse.json({ message: "session not found" }, { status: 401 });
-  }
+  // if (!session) {
+  //   return NextResponse.json({ message: "session not found" }, { status: 401 });
+  // }
 
   if (!id || !roleId) {
     return NextResponse.json(
