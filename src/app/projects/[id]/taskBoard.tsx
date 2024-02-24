@@ -32,7 +32,6 @@ export const TaskBoard = ({
   const {
     mutate: createTask,
     isPending: isCreateTaskPending,
-    variables: newTask,
   } = useCreateTask({
     projectId,
     resetState,
@@ -72,19 +71,7 @@ export const TaskBoard = ({
           statusId={statusId}
         />
       ))}
-      {isCreateTaskPending && (
-        <TaskCard
-          task={{
-            name: newTask.name,
-            projectId: newTask.projectId,
-            description: newTask.description,
-            id: "tempId",
-            statusId: newTask.statusId,
-          }}
-          projectId={projectId}
-          statusId={statusId}
-        />
-      )}
+
       {isAddNewTask ? (
         <div className="border rounded border-border bg-surfaces  mb-3 shadow ">
           <div className="flex flex-col gap-1 p-2">
