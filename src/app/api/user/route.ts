@@ -1,8 +1,7 @@
-import { IUserOutput } from "@/shared/ports/user/getUserOutput";
 // import { getServerSession } from "next-auth";
-import { NextRequest, NextResponse } from "next/server";
-
 import { PrismaClient } from "@prisma/client";
+import { NextRequest, NextResponse } from "next/server";
+import { IUserOutput } from "../../../shared/ports/user/getUserOutput";
 
 const prisma = new PrismaClient();
 
