@@ -19,13 +19,17 @@ export async function POST(req: Request, context: { params: IParams }) {
   const { id: projectId } = context.params;
 
   if (!session) {
-    return NextResponse.json({ message: "session not found" }, { status: 401 });
+    return NextResponse.json(
+      { message: "Error trying to create task! session not found" },
+      { status: 401 }
+    );
   }
 
   if (!name || !projectId || !statusId) {
     return NextResponse.json(
       {
-        message: "name, projectId and statusId are required",
+        message:
+          "Error trying to create task! name, projectId and statusId are required",
       },
       { status: 400 }
     );
@@ -41,7 +45,7 @@ export async function POST(req: Request, context: { params: IParams }) {
   if (!project) {
     return NextResponse.json(
       {
-        message: "project with this id not found",
+        message: "error trying to create task! project with this id not found",
       },
       { status: 400 }
     );

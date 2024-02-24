@@ -1,10 +1,9 @@
 "use client";
 
+import { Loading } from "@/components/Loading";
 import { useProjects } from "@/shared/services/projects";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import Image from "next/image";
-import { Button } from "@/components/Button";
 
 export default function Page() {
   const { data, isLoading } = useProjects();
@@ -14,7 +13,12 @@ export default function Page() {
     redirect("/auth/login");
   }
 
-  if (isLoading) return <div>isLoading</div>;
+  if (isLoading)
+    return (
+      <div>
+        <Loading />
+      </div>
+    );
 
   if (data && data.length === 0) {
     return <div>sem projetos, crie um novo</div>;
@@ -27,12 +31,12 @@ export default function Page() {
         data?.map((project) => (
           <div
             key={project.id}
-            className="border-solid border-2 border-copy-secondary rounded-lg p-4"
+            className="border-solid border border-primary rounded-lg p-4"
           >
             <div className="w-full flex justify-end">
               <a
                 href={`/projects/${project.id}`}
-                className="text-sm font-semibold leading-6 text-gray-900 ml-3"
+                className="text-base font-semibold leading-6 text-secondary hover:text-copy-secondary ml-3"
               >
                 Ver detalhes <span aria-hidden="true">&rarr;</span>
               </a>

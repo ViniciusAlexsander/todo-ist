@@ -40,19 +40,19 @@ export async function POST(req: NextRequest) {
     }),
     prisma.role.findFirst({
       where: {
-        description: "Owner",
+        description: "Super Admin",
       },
     }),
   ]);
 
   if (!ownerRole) {
     return NextResponse.json(
-      { message: "ownerRole not found" },
+      { message: "Super Admin role not found" },
       { status: 400 }
     );
   }
 
-  const projectContribution = await prisma.project_Contribution.create({
+  await prisma.project_Contribution.create({
     data: {
       projectId: newProject.id,
       userId: session.user.id,

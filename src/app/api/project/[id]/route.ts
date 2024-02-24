@@ -120,7 +120,7 @@ export async function DELETE(_req: Request, context: { params: IParams }) {
     {
       message: "Successfully deleted project",
     },
-    { status: 204 }
+    { status: 200 }
   );
 }
 

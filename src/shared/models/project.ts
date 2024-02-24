@@ -1,4 +1,4 @@
-import { User } from "./user";
+import { IUser } from "./user";
 
 export interface IProject {
   id: string;
@@ -16,7 +16,7 @@ export interface ProjectContribution {
   id: string;
   userId: string;
   projectId: string;
-  user: User;
+  user: IUser;
 }
 
 export interface Task {
