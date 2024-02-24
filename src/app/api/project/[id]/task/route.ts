@@ -1,5 +1,5 @@
 import prisma from "@/shared/lib/prisma";
-import { getServerSession } from "next-auth";
+// import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "../../../auth/[...nextauth]/options";
 
@@ -10,7 +10,7 @@ export interface IPostRequest {
 }
 
 export async function POST(req: Request, context: { params: IParams }) {
-  const session = await getServerSession(authOptions);
+  // const session = await getServerSession(authOptions);
   const {
     description = "",
     name,
@@ -18,12 +18,12 @@ export async function POST(req: Request, context: { params: IParams }) {
   }: Partial<IPostRequest> = await req.json();
   const { id: projectId } = context.params;
 
-  if (!session) {
-    return NextResponse.json(
-      { message: "Error trying to create task! session not found" },
-      { status: 401 }
-    );
-  }
+  // if (!session) {
+  //   return NextResponse.json(
+  //     { message: "Error trying to create task! session not found" },
+  //     { status: 401 }
+  //   );
+  // }
 
   if (!name || !projectId || !statusId) {
     return NextResponse.json(
@@ -62,12 +62,12 @@ export async function POST(req: Request, context: { params: IParams }) {
 }
 
 export async function GET(_req: Request, context: { params: IParams }) {
-  const session = await getServerSession(authOptions);
+  // const session = await getServerSession(authOptions);
   const { id: projectId } = context.params;
 
-  if (!session || projectId) {
-    return NextResponse.json({ message: "session not found" }, { status: 401 });
-  }
+  // if (!session || projectId) {
+  //   return NextResponse.json({ message: "session not found" }, { status: 401 });
+  // }
 
   if (!projectId) {
     return NextResponse.json(

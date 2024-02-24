@@ -1,6 +1,6 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 import prisma from "@/shared/lib/prisma";
-import { getServerSession } from "next-auth";
+// import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
 export interface IPutRequest {
@@ -75,12 +75,12 @@ export async function PUT(req: Request, context: { params: IParams }) {
 }
 
 export async function DELETE(req: Request, context: { params: IParams }) {
-  const session = await getServerSession(authOptions);
+  // const session = await getServerSession(authOptions);
   const { id } = context.params;
 
-  if (!session) {
-    return NextResponse.json({ message: "session not found" }, { status: 401 });
-  }
+  // if (!session) {
+  //   return NextResponse.json({ message: "session not found" }, { status: 401 });
+  // }
 
   if (!id) {
     return NextResponse.json(

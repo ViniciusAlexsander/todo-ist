@@ -1,4 +1,4 @@
-import { getServerSession } from "next-auth";
+// import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import prisma from "@/shared/lib/prisma";
 import { authOptions } from "../../auth/[...nextauth]/options";
@@ -8,12 +8,12 @@ import { authOptions } from "../../auth/[...nextauth]/options";
 // })
 
 export async function GET(_req: Request, context: { params: IParams }) {
-  const session = await getServerSession(authOptions);
+  // const session = await getServerSession(authOptions);
   const { id } = context.params;
 
-  if (!session || !session.user.id || !id) {
-    return NextResponse.json({ message: "session not found" }, { status: 401 });
-  }
+  // if (!session || !session.user.id || !id) {
+  //   return NextResponse.json({ message: "session not found" }, { status: 401 });
+  // }
 
   if (!id) {
     return NextResponse.json(
@@ -37,7 +37,7 @@ export async function GET(_req: Request, context: { params: IParams }) {
       },
     },
     where: {
-      userId: session.user.id,
+      // userId: session.user.id,
       AND: {
         projectId: id,
       },
@@ -77,12 +77,12 @@ export async function GET(_req: Request, context: { params: IParams }) {
 }
 
 export async function DELETE(_req: Request, context: { params: IParams }) {
-  const session = await getServerSession(authOptions);
+  // const session = await getServerSession(authOptions);
   const { id } = context.params;
 
-  if (!session || !session.user.id || !id) {
-    return NextResponse.json({ message: "session not found" }, { status: 401 });
-  }
+  // if (!session || !session.user.id || !id) {
+  //   return NextResponse.json({ message: "session not found" }, { status: 401 });
+  // }
 
   if (!id) {
     return NextResponse.json(

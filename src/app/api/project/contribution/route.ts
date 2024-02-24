@@ -1,5 +1,5 @@
 import prisma from "@/shared/lib/prisma";
-import { getServerSession } from "next-auth";
+// import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 
@@ -10,13 +10,13 @@ export interface IProjectContribution {
 }
 
 export async function POST(req: NextRequest) {
-  const session = await getServerSession(authOptions);
+  // const session = await getServerSession(authOptions);
   const { projectId, userId, roleId }: Partial<IProjectContribution> =
     await req.json();
 
-  if (!session || !session.user) {
-    return NextResponse.json({ message: "session not found" }, { status: 401 });
-  }
+  // if (!session || !session.user) {
+  //   return NextResponse.json({ message: "session not found" }, { status: 401 });
+  // }
 
   if (!projectId || !userId || !roleId) {
     return NextResponse.json(

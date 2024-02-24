@@ -1,15 +1,15 @@
 import prisma from "@/shared/lib/prisma";
-import { getServerSession } from "next-auth";
+// import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 
 export async function GET(_req: Request, context: { params: IParams }) {
-  const session = await getServerSession(authOptions);
+  // const session = await getServerSession(authOptions);
   const { id, taskId } = context.params;
 
-  if (!session) {
-    return NextResponse.json({ message: "session not found" }, { status: 401 });
-  }
+  // if (!session) {
+  //   return NextResponse.json({ message: "session not found" }, { status: 401 });
+  // }
 
   if (!id || !taskId) {
     return NextResponse.json(
@@ -42,12 +42,12 @@ export async function GET(_req: Request, context: { params: IParams }) {
 }
 
 export async function DELETE(_req: Request, context: { params: IParams }) {
-  const session = await getServerSession(authOptions);
+  // const session = await getServerSession(authOptions);
   const { id: projectId, taskId } = context.params;
 
-  if (!session) {
-    return NextResponse.json({ message: "session not found" }, { status: 401 });
-  }
+  // if (!session) {
+  //   return NextResponse.json({ message: "session not found" }, { status: 401 });
+  // }
 
   if (!projectId || !taskId) {
     return NextResponse.json(
@@ -94,14 +94,14 @@ export interface IPutRequest {
 }
 
 export async function PUT(req: Request, context: { params: IParams }) {
-  const session = await getServerSession(authOptions);
+  // const session = await getServerSession(authOptions);
   const { id: projectId, taskId } = context.params;
   const { description, name, statusId }: Partial<IPutRequest> =
     await req.json();
 
-  if (!session) {
-    return NextResponse.json({ message: "session not found" }, { status: 401 });
-  }
+  // if (!session) {
+  //   return NextResponse.json({ message: "session not found" }, { status: 401 });
+  // }
 
   if (!projectId || !taskId) {
     return NextResponse.json(
