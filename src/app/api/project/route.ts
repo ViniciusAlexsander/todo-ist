@@ -1,8 +1,8 @@
-import { IProjectContributionOutput } from "@/shared/ports/project/getProjectOutput";
-// import { getServerSession } from "next-auth";
-import { NextRequest, NextResponse } from "next/server";
 
+// import { getServerSession } from "next-auth";
 import { PrismaClient } from "@prisma/client";
+import { NextRequest, NextResponse } from "next/server";
+import { IProjectContributionOutput } from "../../../shared/ports/project/getProjectOutput";
 
 const prisma = new PrismaClient();
 
