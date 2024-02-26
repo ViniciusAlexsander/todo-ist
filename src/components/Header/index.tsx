@@ -37,15 +37,11 @@ export const Header = () => {
           >
             Projetos
           </a>
-          <button
-            className="text-lg font-semibold leading-6 text-primary hover:text-copy-primary"
-            onClick={handleOpenModalNewProject}
-          >
-            Criar projeto
-          </button>
         </div>
         <div className="text-lg flex flex-1 justify-end">
-          Signed in as {session?.user?.name}
+          <div className="hidden sm:flex">
+            Signed in as {session?.user?.name}
+          </div>
           <button
             onClick={handleSingOut}
             className="font-semibold leading-6 text-secondary hover:text-copy-secondary ml-3 "
