@@ -17,6 +17,7 @@ export const Button = ({
   fullWidth,
   loading,
   size,
+  className,
   ...rest
 }: IButtonProps) => {
   const buttonSize = {
@@ -30,7 +31,7 @@ export const Button = ({
       {...rest}
       className={`flex items-center justify-center  bg-secondary hover:bg-copy-secondary text-surfaces disabled:bg-disabled font-bold rounded-md  ${
         fullWidth ? "w-full" : ""
-      } ${buttonSize[size]}`}
+      } ${buttonSize[size]} ${className}`}
     >
       {loading && (
         <svg
