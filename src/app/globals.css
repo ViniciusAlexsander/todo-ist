@@ -22,6 +22,7 @@
 }
 
 body {
+  -webkit-overflow-scrolling: touch;
   color: var(--copy-primary);
   background: linear-gradient(to bottom, transparent, var(--surfaces))
     var(--surfaces);
