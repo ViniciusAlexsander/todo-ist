@@ -69,7 +69,7 @@ export default function Page({ params }: { params: { id: string } }) {
   };
 
   return (
-    <div className="pt-0 p-10">
+    <div className="pt-0 p-8 sm:p-10">
       <ModalNewContribution
         modalOpen={openModalNewContribution}
         handleCloseModal={handleCloseModalNewContribution}
@@ -80,25 +80,26 @@ export default function Page({ params }: { params: { id: string } }) {
         handleCloseModal={handleCloseModalContribution}
         projectId={projectId}
       />
-      <div className="w-full flex justify-between mt-5">
+      <div className="w-full flex flex-col sm:flex-row  justify-between mt-5">
         <div>
           <h1 className="text-xl font-bold text-primary">{data?.name}</h1>
           <p className="text-base text-copy-primary">{data?.description}</p>
         </div>
-        <div className="flex items-center">
-          <div className="mr-8 flex gap-2">
-            <div>
-              {hadPermissionInviteProject && (
-                <Button onClick={handleOpenModalNewContribution} size="medium">
-                  Convidar
-                </Button>
-              )}
-            </div>
-            <div>
-              <Button onClick={handleOpenModalContribution} size="medium">
-                Colaboradores
+        <div className="flex flex-col sm:flex-row items-center w-full mt-4 sm:mt-0 gap-5 sm:gap-0">
+          <div className="sm:mr-8 gap-3 sm:gap-2 flex flex-col sm:flex-row w-full ">
+            {hadPermissionInviteProject && (
+              <Button
+                onClick={handleOpenModalNewContribution}
+                size="medium"
+                className="w-full sm:w-auto"
+              >
+                Convidar
               </Button>
-            </div>
+            )}
+
+            <Button onClick={handleOpenModalContribution} size="medium">
+              Colaboradores
+            </Button>
           </div>
 
           <Link
@@ -110,25 +111,27 @@ export default function Page({ params }: { params: { id: string } }) {
         </div>
       </div>
 
-      <div className="w-3/4 grid grid-cols-3 gap-4 mt-10">
-        <TaskBoard
-          tasks={tasksGroupedByStatus.TODO}
-          title="Todo"
-          projectId={projectId}
-          statusId={TaskStatusEnum.TODO}
-        />
-        <TaskBoard
-          tasks={tasksGroupedByStatus.IN_PROGRESS}
-          title="In Progress"
-          projectId={projectId}
-          statusId={TaskStatusEnum.IN_PROGRESS}
-        />
-        <TaskBoard
-          tasks={tasksGroupedByStatus.DONE}
-          title="Done"
-          projectId={projectId}
-          statusId={TaskStatusEnum.DONE}
-        />
+      <div className="w-full sm:w-3/4 overflow-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-10">
+          <TaskBoard
+            tasks={tasksGroupedByStatus.TODO}
+            title="Todo"
+            projectId={projectId}
+            statusId={TaskStatusEnum.TODO}
+          />
+          <TaskBoard
+            tasks={tasksGroupedByStatus.IN_PROGRESS}
+            title="In Progress"
+            projectId={projectId}
+            statusId={TaskStatusEnum.IN_PROGRESS}
+          />
+          <TaskBoard
+            tasks={tasksGroupedByStatus.DONE}
+            title="Done"
+            projectId={projectId}
+            statusId={TaskStatusEnum.DONE}
+          />
+        </div>
       </div>
     </div>
   );
