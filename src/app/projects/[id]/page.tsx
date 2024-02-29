@@ -85,7 +85,7 @@ export default function Page({ params }: { params: { id: string } }) {
           <h1 className="text-xl font-bold text-primary">{data?.name}</h1>
           <p className="text-base text-copy-primary">{data?.description}</p>
         </div>
-        <div className="flex flex-col sm:flex-row items-center w-full mt-4 sm:mt-0 gap-5 sm:gap-0">
+        <div className="flex flex-col sm:flex-row items-center w-full sm:w-auto mt-4 sm:mt-0 gap-5 sm:gap-0">
           <div className="sm:mr-8 gap-3 sm:gap-2 flex flex-col sm:flex-row w-full ">
             {hadPermissionInviteProject && (
               <Button
@@ -104,7 +104,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
           <Link
             href="/"
-            className="text-base font-semibold leading-6 text-primary hover:text-copy-secondary"
+            className="text-base font-semibold leading-6 text-primary hover:text-copy-secondary w-full"
           >
             Voltar <span aria-hidden="true">&rarr;</span>
           </Link>

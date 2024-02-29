@@ -1,22 +1,35 @@
 import { axiosInstance } from "@/shared/lib/axios";
 import { QueryCaches } from "@/shared/lib/reactQuery";
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useRef, useState } from "react";
-import { Button } from "../Button";
 import { useQueryClient } from "@tanstack/react-query";
+import { ChangeEvent, Fragment, useRef, useState } from "react";
+import { ZodError, z } from "zod";
+import { Button } from "../Button";
 
 interface INewProjectModalProps {
   modalOpen: boolean;
   handleCloseModal: () => void;
 }
 
+type NewProject = {
+  name: string;
+  description: string;
+};
+
+const newProjectSchema = z.object({
+  name: z.string().min(1, { message: "The name is required" }),
+  description: z.string().min(1, { message: "The description is required" }),
+});
+
 export const NewProjectModal = ({
   modalOpen,
   handleCloseModal,
 }: INewProjectModalProps) => {
   const cancelButtonRef = useRef(null);
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const [newProject, setNewProject] = useState<NewProject>({
+    description: "",
+    name: "",
+  });
   const [loading, setLoading] = useState(false);
 
   const queryClient = useQueryClient();
@@ -24,18 +37,35 @@ export const NewProjectModal = ({
   const handleCriarTarefa = async () => {
     try {
       setLoading(true);
+      const zodValidation = newProjectSchema.parse(newProject);
       const response = await axiosInstance.post("project", {
-        description,
-        name,
+        description: newProject.description,
+        name: newProject.name,
       });
       setLoading(false);
       queryClient.invalidateQueries({ queryKey: [QueryCaches.PROJECTS] });
-      setName("");
-      setDescription("");
+      setNewProject({
+        description: "",
+        name: "",
+      });
       handleCloseModal();
-    } catch (error) {
-      window.alert("Erro ao criar projeto, tente novamente mais tarde");
+    } catch (error: ZodError | any) {
+      console.log(error.issues[0].message);
+      window.alert(
+        "Erro ao criar projeto, tente novamente mais tarde, " +
+          error.issues[0].message
+      );
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const handleName = (e: ChangeEvent<HTMLInputElement>) => {
+    setNewProject({ ...newProject, name: e.target.value });
+  };
+
+  const handleDescription = (e: ChangeEvent<HTMLInputElement>) => {
+    setNewProject({ ...newProject, description: e.target.value });
   };
 
   return (
@@ -82,8 +112,8 @@ export const NewProjectModal = ({
                         Nome
                       </span>
                       <input
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        value={newProject.name}
+                        onChange={handleName}
                         placeholder="Descreva o que deve ser feito"
                         className="border-border border-2 rounded-md p-2 w-full"
                         type="text"
@@ -94,8 +124,8 @@ export const NewProjectModal = ({
                         Descrição
                       </span>
                       <input
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
+                        value={newProject.description}
+                        onChange={handleDescription}
                         placeholder="Descreva o que deve ser feito"
                         className="border-border border-2 rounded-md p-2 w-full"
                         type="text"
@@ -116,7 +146,7 @@ export const NewProjectModal = ({
                       onClick={handleCriarTarefa}
                       fullWidth
                       loading={loading}
-                      disabled={!name || !description}
+                      disabled={!newProject.name || !newProject.description}
                     >
                       Criar projeto
                     </Button>
