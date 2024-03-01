@@ -2,19 +2,15 @@ import { axiosInstance } from "@/shared/lib/axios";
 import { QueryCaches } from "@/shared/lib/reactQuery";
 import { Dialog, Transition } from "@headlessui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { ChangeEvent, Fragment, useRef, useState } from "react";
+import { ChangeEvent, Fragment, useReducer, useRef, useState } from "react";
 import { ZodError, z } from "zod";
 import { Button } from "../Button";
+import { initialState, reducerNewProject } from "./newProjectService";
 
 interface INewProjectModalProps {
   modalOpen: boolean;
   handleCloseModal: () => void;
 }
-
-type NewProject = {
-  name: string;
-  description: string;
-};
 
 const newProjectSchema = z.object({
   name: z.string().min(1, { message: "The name is required" }),
@@ -26,10 +22,7 @@ export const NewProjectModal = ({
   handleCloseModal,
 }: INewProjectModalProps) => {
   const cancelButtonRef = useRef(null);
-  const [newProject, setNewProject] = useState<NewProject>({
-    description: "",
-    name: "",
-  });
+  const [newProject, dispatch] = useReducer(reducerNewProject, initialState);
   const [loading, setLoading] = useState(false);
 
   const queryClient = useQueryClient();
@@ -44,9 +37,8 @@ export const NewProjectModal = ({
       });
       setLoading(false);
       queryClient.invalidateQueries({ queryKey: [QueryCaches.PROJECTS] });
-      setNewProject({
-        description: "",
-        name: "",
+      dispatch({
+        type: "RESET_VALUE",
       });
       handleCloseModal();
     } catch (error: ZodError | any) {
@@ -61,11 +53,17 @@ export const NewProjectModal = ({
   };
 
   const handleName = (e: ChangeEvent<HTMLInputElement>) => {
-    setNewProject({ ...newProject, name: e.target.value });
+    dispatch({
+      type: "CHANGE_NAME",
+      state: e.target.value,
+    });
   };
 
   const handleDescription = (e: ChangeEvent<HTMLInputElement>) => {
-    setNewProject({ ...newProject, description: e.target.value });
+    dispatch({
+      type: "CHANGE_DESCRIPTION",
+      state: e.target.value,
+    });
   };
 
   return (
