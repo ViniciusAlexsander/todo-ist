@@ -5,7 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { ChangeEvent, Fragment, useReducer, useRef, useState } from "react";
 import { ZodError, z } from "zod";
 import { Button } from "../Button";
-import { initialState, reducerNewProject } from "./newProjectService";
+import { initialState, reducerNewProjectComImmer } from "./newProjectService";
 
 interface INewProjectModalProps {
   modalOpen: boolean;
@@ -22,7 +22,10 @@ export const NewProjectModal = ({
   handleCloseModal,
 }: INewProjectModalProps) => {
   const cancelButtonRef = useRef(null);
-  const [newProject, dispatch] = useReducer(reducerNewProject, initialState);
+  const [newProject, dispatch] = useReducer(
+    reducerNewProjectComImmer,
+    initialState
+  );
   const [loading, setLoading] = useState(false);
 
   const queryClient = useQueryClient();
@@ -30,7 +33,7 @@ export const NewProjectModal = ({
   const handleCriarTarefa = async () => {
     try {
       setLoading(true);
-      const zodValidation = newProjectSchema.parse(newProject);
+      newProjectSchema.parse(newProject);
       const response = await axiosInstance.post("project", {
         description: newProject.description,
         name: newProject.name,
