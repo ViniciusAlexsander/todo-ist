@@ -2,7 +2,7 @@ import { IUser } from "./user";
 
 export interface IProject {
   id: string;
-  userId: string;
+  createdBy: string;
   name: string;
   description: string;
   createdAt: Date;

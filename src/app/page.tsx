@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/Button";
+import { UserGroupIcon } from "@/components/Icons";
 import { Loading } from "@/components/Loading";
 import { NewProjectModal } from "@/components/NewProjectModal";
 import { NoProjectAdvice } from "@/components/NoProjectsAdvice";
@@ -60,7 +61,21 @@ export default function Page() {
               key={project.id}
               className="border-solid border border-primary rounded-lg p-4"
             >
-              <div className="w-full flex justify-end">
+              <div
+                className={`w-full flex ${
+                  session.user.id !== project.createdBy
+                    ? "justify-between"
+                    : "justify-end"
+                }`}
+              >
+                {session.user.id !== project.createdBy && (
+                  <div className="flex items-center text-copy-secondary ">
+                    <UserGroupIcon  />
+                    <p className="text-base font-semibold leading-6 ml-2">
+                      Colaborador
+                    </p>
+                  </div>
+                )}
                 <a
                   href={`/projects/${project.id}`}
                   className="text-base font-semibold leading-6 text-secondary hover:text-copy-secondary ml-3"
