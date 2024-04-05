@@ -2,6 +2,8 @@ import { Header } from "@/components/Header";
 import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { Inter } from "next/font/google";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { authOptions } from "./api/auth/[...nextauth]/options";
 import "./globals.css";
 import { Providers } from "./providers";
@@ -22,6 +24,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
+        <ToastContainer position="top-right" theme="colored" />
         <Providers>
           {session && <Header />}
 

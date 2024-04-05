@@ -2,7 +2,8 @@ import { axiosInstance } from "@/shared/lib/axios";
 import { QueryCaches } from "@/shared/lib/reactQuery";
 import { Dialog, Transition } from "@headlessui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { ChangeEvent, Fragment, useReducer, useRef, useState } from "react";
+import { ChangeEvent, Fragment, useReducer, useRef } from "react";
+import { toast } from "react-toastify";
 import { ZodError, z } from "zod";
 import { Button } from "../Button";
 import { initialState, reducerNewProjectComImmer } from "./newProjectService";
@@ -13,8 +14,11 @@ interface INewProjectModalProps {
 }
 
 const newProjectSchema = z.object({
-  name: z.string().min(1, { message: "The name is required" }),
-  description: z.string().min(1, { message: "The description is required" }),
+  name: z
+    .string()
+    .min(1, { message: "name is required" })
+    .max(20, { message: "name is to long" }),
+  description: z.string().min(1, { message: "description is required" }),
 });
 
 export const NewProjectModal = ({
@@ -26,32 +30,38 @@ export const NewProjectModal = ({
     reducerNewProjectComImmer,
     initialState
   );
-  const [loading, setLoading] = useState(false);
 
   const queryClient = useQueryClient();
 
   const handleCriarTarefa = async () => {
     try {
-      setLoading(true);
-      newProjectSchema.parse(newProject);
-      const response = await axiosInstance.post("project", {
-        description: newProject.description,
-        name: newProject.name,
+      dispatch({
+        type: "LOADING",
+        state: true,
       });
-      setLoading(false);
+      const zodProject = newProjectSchema.parse(newProject);
+
+      await axiosInstance.post("project", {
+        description: zodProject.description,
+        name: zodProject.name,
+      });
+
+      dispatch({
+        type: "LOADING",
+        state: false,
+      });
       queryClient.invalidateQueries({ queryKey: [QueryCaches.PROJECTS] });
       dispatch({
         type: "RESET_VALUE",
       });
       handleCloseModal();
     } catch (error: ZodError | any) {
-      console.log(error.issues[0].message);
-      window.alert(
-        "Erro ao criar projeto, tente novamente mais tarde, " +
-          error.issues[0].message
-      );
+      toast.error("Erro ao criar projeto, " + error.issues[0].message);
     } finally {
-      setLoading(false);
+      dispatch({
+        type: "LOADING",
+        state: false,
+      });
     }
   };
 
@@ -146,7 +156,7 @@ export const NewProjectModal = ({
                       size="medium"
                       onClick={handleCriarTarefa}
                       fullWidth
-                      loading={loading}
+                      loading={newProject.loading}
                       disabled={!newProject.name || !newProject.description}
                     >
                       Criar projeto
