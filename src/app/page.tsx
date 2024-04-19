@@ -9,9 +9,10 @@ import { useProjects } from "@/shared/services/projects";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useState } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 
 export default function Page() {
-  const { data, isLoading } = useProjects();
+  const { data, isLoading, error } = useProjects();
   const { data: session } = useSession();
   const [openNewProjectModal, setOpenNewProjectModal] = useState(false);
 
@@ -30,6 +31,10 @@ export default function Page() {
     return <NoProjectAdvice />;
   }
 
+  if (error) {
+    throw new Error("Ërro");
+  }
+
   const handleCloseModalNewProject = () => {
     setOpenNewProjectModal(false);
   };
@@ -39,60 +44,61 @@ export default function Page() {
   };
 
   return (
-    <div className="p-6">
-      <NewProjectModal
-        modalOpen={openNewProjectModal}
-        handleCloseModal={handleCloseModalNewProject}
-      />
-      <div className="flex items-center justify-center sm:justify-end mb-4">
-        <Button
-          size="medium"
-          className="w-full sm:w-auto"
-          onClick={handleOpenModalNewProject}
-        >
-          Criar projeto
-        </Button>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 ">
-        {data &&
-          data.length > 0 &&
-          data?.map((project) => (
-            <div
-              key={project.id}
-              className="border-solid border border-primary rounded-lg p-4"
-            >
+    <ErrorBoundary fallback={<div>Something went wrong</div>}>
+      <div className="p-6">
+        <NewProjectModal
+          modalOpen={openNewProjectModal}
+          handleCloseModal={handleCloseModalNewProject}
+        />
+        <div className="flex items-center justify-center sm:justify-end mb-4">
+          <Button
+            size="medium"
+            className="w-full sm:w-auto"
+            onClick={handleOpenModalNewProject}
+          >
+            Criar projeto
+          </Button>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 ">
+          {data &&
+            data.length > 0 &&
+            data?.map((project) => (
               <div
-                className={`w-full flex ${
-                  session.user.id !== project.createdBy
-                    ? "justify-between"
-                    : "justify-end"
-                }`}
+                key={project.id}
+                className="border-solid border border-primary rounded-lg p-4"
               >
-                {session.user.id !== project.createdBy && (
-                  <div className="flex items-center text-copy-secondary ">
-                    <UserGroupIcon  />
-                    <p className="text-base font-semibold leading-6 ml-2">
-                      Colaborador
-                    </p>
-                  </div>
-                )}
-                <a
-                  href={`/projects/${project.id}`}
-                  className="text-base font-semibold leading-6 text-secondary hover:text-copy-secondary ml-3"
+                <div
+                  className={`w-full flex ${
+                    session.user.id !== project.createdBy
+                      ? "justify-between"
+                      : "justify-end"
+                  }`}
                 >
-                  Ver detalhes <span aria-hidden="true">&rarr;</span>
-                </a>
-              </div>
-              <div>
-                <p>
-                  <b>Nome do projeto: </b>
-                  {project.name}
-                </p>
-                <p>
-                  <b>Descrição: </b>
-                  {project.description}
-                </p>
-                {/* <div>
+                  {session.user.id !== project.createdBy && (
+                    <div className="flex items-center text-copy-secondary ">
+                      <UserGroupIcon />
+                      <p className="text-base font-semibold leading-6 ml-2">
+                        Colaborador
+                      </p>
+                    </div>
+                  )}
+                  <a
+                    href={`/projects/${project.id}`}
+                    className="text-base font-semibold leading-6 text-secondary hover:text-copy-secondary ml-3"
+                  >
+                    Ver detalhes <span aria-hidden="true">&rarr;</span>
+                  </a>
+                </div>
+                <div>
+                  <p>
+                    <b>Nome do projeto: </b>
+                    {project.name}
+                  </p>
+                  <p>
+                    <b>Descrição: </b>
+                    {project.description}
+                  </p>
+                  {/* <div>
                 <b>Contribuidores: </b>
                 <div className="mt-2">
                   {project.projectContribution.length > 0 && (
@@ -128,10 +134,11 @@ export default function Page() {
                   )}
                 </div>
               </div> */}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+        </div>
       </div>
-    </div>
+    </ErrorBoundary>
   );
 }

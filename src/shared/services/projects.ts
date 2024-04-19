@@ -7,7 +7,7 @@ export const useProjects = () => {
   return useQuery({
     queryKey: [QueryCaches.PROJECTS],
     queryFn: async () => {
-      const { data } = await axiosInstance.get<IProject[]>("project");
+      const { data } = await axiosInstance.get<IProject[]>("projectaaaaaa");
 
       return data;
     },
