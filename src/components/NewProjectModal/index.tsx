@@ -5,11 +5,11 @@ import { QueryCaches } from "@/shared/lib/reactQuery";
 import { Dialog, Transition } from "@headlessui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { ChangeEvent, Fragment, useReducer, useRef } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { toast } from "react-toastify";
 import { ZodError, z } from "zod";
 import { Button } from "../Button";
 import { initialState, reducerNewProjectComImmer } from "./newProjectService";
-import { ErrorBoundary } from "react-error-boundary";
 
 interface INewProjectModalProps {
   modalOpen: boolean;
@@ -37,34 +37,33 @@ export const NewProjectModal = ({
   const queryClient = useQueryClient();
 
   const handleCriarTarefa = async () => {
-    throw new Error("Example Error: An error thrown to trigger error boundary");
-    // try {
-    //   dispatch({
-    //     type: "LOADING",
-    //     state: true,
-    //   });
-    //   const zodProject = newProjectSchema.parse(newProject);
-    //   await axiosInstance.post("project", {
-    //     description: zodProject.description,
-    //     name: zodProject.name,
-    //   });
-    //   dispatch({
-    //     type: "LOADING",
-    //     state: false,
-    //   });
-    //   queryClient.invalidateQueries({ queryKey: [QueryCaches.PROJECTS] });
-    //   dispatch({
-    //     type: "RESET_VALUE",
-    //   });
-    //   handleCloseModal();
-    // } catch (error: ZodError | any) {
-    //   toast.error("Erro ao criar projeto, " + error.issues[0].message);
-    // } finally {
-    //   dispatch({
-    //     type: "LOADING",
-    //     state: false,
-    //   });
-    // }
+    try {
+      dispatch({
+        type: "LOADING",
+        state: true,
+      });
+      const zodProject = newProjectSchema.parse(newProject);
+      await axiosInstance.post("project", {
+        description: zodProject.description,
+        name: zodProject.name,
+      });
+      dispatch({
+        type: "LOADING",
+        state: false,
+      });
+      queryClient.invalidateQueries({ queryKey: [QueryCaches.PROJECTS] });
+      dispatch({
+        type: "RESET_VALUE",
+      });
+      handleCloseModal();
+    } catch (error: ZodError | any) {
+      toast.error("Erro ao criar projeto, " + error.issues[0].message);
+    } finally {
+      dispatch({
+        type: "LOADING",
+        state: false,
+      });
+    }
   };
 
   const handleName = (e: ChangeEvent<HTMLInputElement>) => {
