@@ -70,27 +70,37 @@ export const useDeleteTask = ({ projectId, taskId }: IDeleteTask) => {
 
 interface IUpdateTask {
   taskId: string;
-  newStatus: TaskStatusEnum;
+  newStatus?: TaskStatusEnum;
   projectId: string;
+  name?: string;
+  description?: string;
+  resetState: () => void;
 }
 
 export const useUpdateTask = ({
   taskId,
   newStatus,
   projectId,
+  name,
+  description,
+  resetState,
 }: IUpdateTask) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: () =>
       axiosInstance.put(`project/${projectId}/task/${taskId}`, {
         statusId: newStatus,
+        name,
+        description,
       }),
     onSettled: async () => {
       return await queryClient.invalidateQueries({
         queryKey: [QueryCaches.PROJECTS],
       });
     },
-    onSuccess: (data) => {},
+    onSuccess: (data) => {
+      resetState();
+    },
     onError: (error: Error) => {
       window.alert("Erro ao atualizar tarefa, tente novamente mais tarde");
     },

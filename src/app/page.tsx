@@ -32,7 +32,7 @@ export default function Page() {
   }
 
   if (error) {
-    throw new Error("Ërro");
+    throw new Error("Erro");
   }
 
   const handleCloseModalNewProject = () => {

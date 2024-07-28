@@ -10,6 +10,7 @@ interface IButtonProps
   fullWidth?: boolean;
   loading?: boolean;
   size: "small" | "medium" | "large";
+  variant?: "text" | "content";
 }
 
 export const Button = ({
@@ -18,6 +19,7 @@ export const Button = ({
   loading,
   size,
   className,
+  variant = "content",
   ...rest
 }: IButtonProps) => {
   const buttonSize = {
@@ -26,12 +28,18 @@ export const Button = ({
     large: "py-4 px-5",
   };
 
+  const variantStyle = {
+    content:
+      "bg-secondary hover:bg-copy-secondary text-surfaces disabled:bg-disabled font-bold",
+    text: "font-medium hover:bg-secondary hover:text-surfaces",
+  };
+
   return (
     <button
       {...rest}
-      className={`flex items-center justify-center  bg-secondary hover:bg-copy-secondary text-surfaces disabled:bg-disabled font-bold rounded-md  ${
+      className={`flex items-center justify-center rounded-md   ${
         fullWidth ? "w-full" : ""
-      } ${buttonSize[size]} ${className}`}
+      } ${buttonSize[size]} ${variantStyle[variant]} ${className}`}
     >
       {loading && (
         <svg
